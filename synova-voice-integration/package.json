@@ -1,0 +1,43 @@
+{
+  "name": "@synova/voice-integration",
+  "version": "4.1.0",
+  "description": "Synova AI Voice Integration - Whisper.js + MediaPipe for XR applications",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "jest",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "whisper": "^1.1.0",
+    "@mediapipe/face_mesh": "^0.4.1633559619",
+    "@mediapipe/hands": "^0.4.1633559619",
+    "@mediapipe/pose": "^0.5.1675469404",
+    "@mediapipe/camera_utils": "^0.3.1632472248",
+    "@mediapipe/drawing_utils": "^0.3.1620248257",
+    "web-audio-api": "^0.2.2",
+    "worker-loader": "^3.0.8",
+    "socket.io-client": "^4.7.0",
+    "framer-motion": "^10.16.0",
+    "lucide-react": "^0.294.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "jest": "^29.0.0",
+    "@testing-library/react": "^13.0.0",
+    "webpack": "^5.88.0"
+  },
+  "keywords": ["synova", "voice", "whisper", "mediapipe", "xr", "speech-recognition"],
+  "author": "Synova AI",
+  "license": "MIT"
+}

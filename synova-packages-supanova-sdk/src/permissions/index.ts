@@ -111,9 +111,9 @@ export class PermissionManager extends EventEmitter implements IPermissionManage
    */
   updatePermissions(toolName: string, permissions: ToolPermission): void {
     // Validate permissions
-    const validation = this.validatePermissions(permissions);
+    const validation = this.validatePermissionStructure(permissions);
     if (!validation.valid) {
-      throw new Error(`Invalid permissions: ${validation.errors.map(e => e.message).join(', ')}`);
+      throw new Error(`Invalid permissions: ${validation.errors.map((e: ValidationError) => e.message).join(', ')}`);
     }
 
     this.permissions.set(toolName, permissions);
@@ -152,7 +152,7 @@ export class PermissionManager extends EventEmitter implements IPermissionManage
     let allValid = true;
 
     for (const [toolName, permissions] of this.permissions) {
-      const validation = this.validatePermissions(permissions);
+      const validation = this.validatePermissionStructure(permissions);
       if (!validation.valid) {
         console.error(`Invalid permissions for tool '${toolName}':`, validation.errors);
         allValid = false;
@@ -234,7 +234,7 @@ export class PermissionManager extends EventEmitter implements IPermissionManage
   /**
    * Validate permission structure
    */
-  private validatePermissions(permission: ToolPermission): ValidationResult {
+  private validatePermissionStructure(permission: ToolPermission): ValidationResult {
     const errors: ValidationError[] = [];
     const warnings: ValidationError[] = [];
 
@@ -381,8 +381,8 @@ export class PermissionManager extends EventEmitter implements IPermissionManage
     return {
       total_tools: this.permissions.size,
       permission_checks: this.auditLog.length,
-      allowed_checks,
-      denied_checks,
+      allowed_checks: allowedChecks,
+      denied_checks: deniedChecks,
       most_denied_tools: mostDeniedTools,
       role_usage: roleUsage,
     };
@@ -511,7 +511,8 @@ export class SecurityUtils {
       }
 
       // Check for SQL injection patterns
-      if (/('|(--)|(;)|(\b(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})\b)/i.test(input)) {
+      const sqlPattern = /[';]|(--)|(\b(ALTER|CREATE|DELETE|DROP|EXEC|INSERT|MERGE|SELECT|UPDATE|UNION)\b)/i;
+      if (sqlPattern.test(input)) {
         errors.push({
           field: 'input',
           message: 'Potential SQL injection pattern detected',

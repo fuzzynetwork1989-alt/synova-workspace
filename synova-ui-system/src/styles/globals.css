@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles */
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-synova-900 via-synova-800 to-synova-900;
+    @apply text-synova-100;
+    @apply font-synova;
+    @apply min-h-screen;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  /* Glassmorphism variants */
+  .glass-primary {
+    @apply bg-glass-white/10 backdrop-blur-xl border border-glass;
+    @apply shadow-glass;
+  }
+  
+  .glass-secondary {
+    @apply bg-glass-black/10 backdrop-blur-xl border border-glass-dark;
+    @apply shadow-glass;
+  }
+  
+  /* Holo effects */
+  .holo-primary {
+    @apply holo-border holo-glow;
+    background: linear-gradient(135deg, 
+      rgba(0, 212, 255, 0.1) 0%, 
+      rgba(168, 85, 247, 0.1) 50%, 
+      rgba(236, 72, 153, 0.1) 100%);
+  }
+  
+  /* XR specific styles */
+  .xr-container {
+    @apply min-h-screen flex items-center justify-center;
+    @apply p-4;
+    background: radial-gradient(ellipse at center, 
+      rgba(0, 212, 255, 0.1) 0%, 
+      transparent 70%);
+  }
+  
+  .xr-panel {
+    @apply glass-primary rounded-3xl p-6 backdrop-blur-2xl;
+    @apply shadow-glass-lg;
+    @apply max-w-md w-full;
+  }
+  
+  /* Blueprint grid */
+  .blueprint-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+    @apply p-6;
+  }
+  
+  /* Voice command styles */
+  .voice-active {
+    @apply animate-pulse;
+    animation: voiceGlow 1.5s ease-in-out infinite;
+  }
+  
+  /* Loading states */
+  .loading-shimmer {
+    @apply relative overflow-hidden;
+  }
+  
+  .loading-shimmer::before {
+    content: '';
+    @apply absolute inset-0;
+    @apply bg-gradient-to-r from-transparent via-white/10 to-transparent;
+    animation: shimmer 2s infinite;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  /* Text effects */
+  .text-glow {
+    text-shadow: 0 0 10px currentColor;
+  }
+  
+  .text-holo {
+    @apply holo-text;
+  }
+  
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2;
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300 hover:holo-glow;
+  }
+  
+  /* Animation utilities */
+  .animate-float-slow {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-glow-pulse {
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+  
+  /* Responsive glass effects */
+  .glass-responsive {
+    @apply glass-primary;
+  }
+  
+  @media (max-width: 768px) {
+    .glass-responsive {
+      @apply bg-glass-white/5 backdrop-blur-md;
+    }
+  }
+}
+
+/* Custom animations */
+@keyframes voiceGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.8);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(0, 212, 255, 1));
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-glass-black/20;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-synova-600/50 rounded-full;
+  @apply hover:bg-synova-500/70;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-synova-400/90;
+}
+
+/* Selection styling */
+::selection {
+  @apply bg-synova-500/30 text-synova-100;
+}
+
+/* Focus styles */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-synova-400/50 focus:ring-offset-2 focus:ring-offset-synova-900;
+}
+
+/* XR specific media queries */
+@media (min-width: 1024px) {
+  .xr-desktop {
+    @apply hidden;
+  }
+}
+
+@media (max-width: 1023px) {
+  .xr-mobile {
+    @apply hidden;
+  }
+}
+
+/* Print styles */
+@media print {
+  .glass-primary,
+  .glass-secondary {
+    @apply bg-white text-black border border-gray-300;
+    backdrop-filter: none;
+  }
+  
+  .holo-glow,
+  .holo-glow-lg {
+    filter: none;
+  }
+}

@@ -1,0 +1,71 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "synova_rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Synova Core API
+  - job_name: 'synova-core-api'
+    static_configs:
+      - targets: ['synova-core-api:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Synova Holo Renderer
+  - job_name: 'synova-holo-renderer'
+    static_configs:
+      - targets: ['synova-holo-renderer:3001']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Synova UI System
+  - job_name: 'synova-ui-system'
+    static_configs:
+      - targets: ['synova-ui-system:3000']
+    metrics_path: '/api/metrics'
+    scrape_interval: 30s
+
+  # Node Exporter (system metrics)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # PostgreSQL Exporter
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+  # Redis Exporter
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+
+  # Ollama
+  - job_name: 'ollama'
+    static_configs:
+      - targets: ['synova-brain:11434']
+    metrics_path: '/api/metrics'
+    scrape_interval: 60s
+
+  # Nginx
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['synova-nginx:9113']
+
+  # Docker
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['docker-exporter:9323']

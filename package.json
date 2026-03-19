@@ -1,0 +1,34 @@
+{
+  "name": "synova-ai-ultimate-v4.1",
+  "version": "4.1.0",
+  "description": "Synova AI Autopilot Mode v4.1 - Complete AI-powered XR architecture factory",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "next": "14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.1",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.15",
+    "typescript": "^5.7.3",
+    "vercel": "^39.2.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["synova", "ai", "xr", "vr", "ar", "architecture", "autopilot"],
+  "author": "Synova AI",
+  "license": "MIT"
+}
