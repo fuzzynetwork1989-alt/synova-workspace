@@ -1,5 +1,5 @@
-# Production Requirements - Zero Exit Code Issues
-# Core dependencies
+# Production Requirements - Railway Fixed Dependencies
+# Core dependencies with exact versions
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pydantic==2.5.0
@@ -9,10 +9,7 @@ python-multipart==0.0.6
 redis==5.0.1
 aiofiles==23.2.1
 psutil==5.9.6
+requests==2.31.0
 
 # Optional dependencies with error handling
-ollama==0.1.7 || echo "Ollama not available, continuing..."
-
-# Development dependencies (optional)
-pytest==7.4.3 || echo "Pytest not available, continuing..."
-pytest-asyncio==0.21.1 || echo "Pytest-asyncio not available, continuing..."
+ollama==0.1.7
