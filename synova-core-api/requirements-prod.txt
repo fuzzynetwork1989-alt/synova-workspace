@@ -1,4 +1,4 @@
-# requirements.txt
+# Production requirements for Enhanced Synova Brain
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 ollama==0.1.7
@@ -12,3 +12,4 @@ psycopg2-binary==2.9.9
 stripe==7.5.0
 python-dotenv==1.0.0
 httpx==0.25.2
+psutil==5.9.0

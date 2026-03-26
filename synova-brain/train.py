@@ -141,14 +141,14 @@ class SynovaBrainTrainer:
     
     def create_modelfile(self, model_path):
         """Create Ollama Modelfile for deployment"""
-        modelfile_content = f"""FROM {model_path}
+        modelfile_content = "FROM " + model_path + """
 
 TEMPLATE \"\"\"{{{{ if .System }}}}<|im_start|>system
 Synova Brain v3.2: Autonomous XR architect + app factory{{{{ .System }}}}<|im_end|>
 {{{{ end }}}{{{{ if .Prompt }}}}<|im_start|>user
 {{{{ .Prompt }}}}<|im_end|>
 {{{{ end }}}}<|im_start|>assistant
-\"\"\"
+\"\""
 
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9

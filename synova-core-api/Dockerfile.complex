@@ -1,0 +1,35 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Force complete cache invalidation
+RUN echo "NEW BUILD: $(date)" && rm -rf /var/cache/apt/*
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Clean up any old requirements
+RUN rm -f requirements.txt requirements-prod.txt
+
+# Copy the final requirements file
+COPY requirements-final.txt requirements.txt
+
+# Install Python packages
+RUN echo "Installing packages: $(date)" && pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Start command
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,0 +1,14 @@
+
+services:
+  - type: web
+    name: synova-ai-api
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements-railway.txt"
+    startCommand: "python start_railway.py"
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: PYTHONPATH
+        value: /opt/render/project/src
+    

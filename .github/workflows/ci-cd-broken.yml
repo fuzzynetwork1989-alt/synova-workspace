@@ -1,0 +1,488 @@
+name: Enhanced Synova Brain CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+
+jobs:
+  # Backend Tests and Validation
+  backend-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        cd synova-core-api
+        pip install --upgrade pip
+        pip install -r requirements-railway.txt
+        pip install pytest pytest-asyncio pytest-cov black flake8 mypy
+    
+    - name: Code quality checks
+      run: |
+        cd synova-core-api
+        black --check .
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        mypy main.py --ignore-missing-imports
+    
+    - name: Run unit tests
+      run: |
+        cd synova-core-api
+        pytest tests/ -v --cov=. --cov-report=xml
+    
+    - name: Test API endpoints
+      run: |
+        cd synova-core-api
+        python -c "
+import asyncio
+import aiohttp
+import json
+
+async def test_endpoints():
+    async with aiohttp.ClientSession() as session:
+        # Test health endpoint
+        async with session.get('http://localhost:8000/health') as resp:
+            assert resp.status == 200
+            data = await resp.json()
+            print('Health check passed:', data)
+        
+        # Test generation endpoint
+        payload = {
+            'prompt': 'Test prompt',
+            'tier': 'synova-brain-v3.2',
+            'session_id': 'test-session'
+        }
+        async with session.post('http://localhost:8000/ai/generate', json=payload) as resp:
+            assert resp.status == 200
+            data = await resp.json()
+            print('Generation test passed:', 'response' in data)
+
+asyncio.run(test_endpoints())
+        "
+      env:
+        REDIS_URL: redis://localhost:6379
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./synova-core-api/coverage.xml
+        flags: backend
+        name: backend-coverage
+
+  # Frontend Tests
+  frontend-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        npm install
+        npm install --save-dev jest @testing-library/react @testing-library/jest-dom
+    
+    - name: Run tests
+      run: |
+        npm test -- --coverage --watchAll=false
+    
+    - name: Build frontend
+      run: |
+        npm run build
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        flags: frontend
+        name: frontend-coverage
+
+  # Integration Tests
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        cd synova-core-api
+        pip install --upgrade pip
+        pip install -r requirements-railway.txt
+        pip install pytest pytest-asyncio aiohttp
+        cd ..
+        npm install
+    
+    - name: Start backend
+      run: |
+        cd synova-core-api
+        uvicorn main:app --host 0.0.0.0 --port 8000 &
+        sleep 10
+    
+    - name: Run integration tests
+      run: |
+        python test_production_api.py
+    
+    - name: Test WebSocket connections
+      run: |
+        python -c "
+import asyncio
+import websockets
+import json
+
+async def test_websocket():
+    uri = 'ws://localhost:8000/ws'
+    async with websockets.connect(uri) as websocket:
+        message = {
+            'type': 'test',
+            'data': 'WebSocket test'
+        }
+        await websocket.send(json.dumps(message))
+        response = await websocket.recv()
+        print('WebSocket test passed:', response)
+
+asyncio.run(test_websocket())
+        "
+
+  # Security Scans
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+    
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+    
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        languages: python, javascript
+
+  # Docker Build and Test
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, security-scan]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Build Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./synova-core-api
+        file: ./synova-core-api/Dockerfile
+        push: false
+        tags: synova-brain:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Test Docker container
+      run: |
+        docker run -d --name synova-test -p 8000:8000 synova-brain:test
+        sleep 30
+        
+        # Test health endpoint
+        curl -f http://localhost:8000/health || exit 1
+        
+        # Test generation endpoint
+        curl -X POST http://localhost:8000/ai/generate \
+          -H "Content-Type: application/json" \
+          -d '{"prompt":"test","tier":"synova-brain-v3.2"}' || exit 1
+        
+        docker stop synova-test
+        docker rm synova-test
+
+  # Deploy to Railway (Production)
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, integration-tests, docker-build]
+    if: github.ref == 'refs/heads/main'
+    
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install Railway CLI
+      run: |
+        curl -fsSL https://github.com/railwayapp/railway/releases/download/v3.0.0/railway-v3.0.0-linux-x64.tar.gz | tar -xz
+        sudo mv railway /usr/local/bin
+    
+    - name: Deploy to Railway
+      run: |
+        cd synova-core-api
+        railway login --token ${{ secrets.RAILWAY_TOKEN }}
+        railway up --service "Synova AI"
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    
+    - name: Wait for deployment
+      run: |
+        cd synova-core-api
+        railway login --token ${{ secrets.RAILWAY_TOKEN }}
+        
+        # Wait for deployment to complete
+        for i in {1..30}; do
+          STATUS=$(railway service status | grep "Status:" | cut -d' ' -f2)
+          if [ "$STATUS" = "SUCCESS" ]; then
+            echo "Deployment successful"
+            break
+          elif [ "$STATUS" = "FAILED" ]; then
+            echo "Deployment failed"
+            railway logs
+            exit 1
+          fi
+          echo "Waiting for deployment... ($i/30)"
+          sleep 10
+        done
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    
+    - name: Run production tests
+      run: |
+        python test_production_api.py
+    
+    - name: Update production environment
+      run: |
+        cd synova-core-api
+        railway login --token ${{ secrets.RAILWAY_TOKEN }}
+        
+        # Set production environment variables
+        railway variables set SYNNOVA_BRAIN_ENABLED=true
+        railway variables set MODEL_NAME=microsoft/DialoGPT-medium
+        railway variables set DEVICE=cpu
+        railway variables set STREAMING_ENABLED=true
+        railway variables set FUNCTION_CALLING_ENABLED=true
+        railway variables set ENVIRONMENT=production
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+  # Deploy to Vercel (Frontend)
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    needs: [frontend-tests, integration-tests]
+    if: github.ref == 'refs/heads/main'
+    
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'
+        working-directory: ./
+    
+    - name: Update frontend environment
+      run: |
+        # Update frontend with production Railway URL
+        sed -i 's|https://your-railway-url.up.railway.app|https://synova-ai-production.up.railway.app|g' synova-brain-llm-wrapper-production.js
+
+  # Post-deployment Tests
+  post-deployment-tests:
+    runs-on: ubuntu-latest
+    needs: [deploy-production, deploy-frontend]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install aiohttp pytest pytest-asyncio
+    
+    - name: Run production smoke tests
+      run: |
+        python -c "
+import asyncio
+import aiohttp
+import json
+
+async def smoke_tests():
+    base_url = 'https://synova-ai-production.up.railway.app'
+    
+    async with aiohttp.ClientSession() as session:
+        # Test all endpoints
+        endpoints = [
+            '/health',
+            '/health/detailed',
+            '/ai/generate',
+            '/ai/function-call',
+            '/ai/blueprint',
+            '/ai/code',
+            '/ai/reasoning',
+            '/ai/memory'
+        ]
+        
+        results = {}
+        for endpoint in endpoints:
+            try:
+                if endpoint == '/health' or endpoint == '/health/detailed':
+                    async with session.get(f'{base_url}{endpoint}') as resp:
+                        results[endpoint] = resp.status
+                else:
+                    payload = {'prompt': 'smoke test', 'tier': 'synova-brain-v3.2'}
+                    if endpoint == '/blueprint':
+                        payload = {'blueprint_type': 'modern', 'parameters': {}}
+                    elif endpoint == '/code':
+                        payload = {'prompt': 'test', 'language': 'javascript'}
+                    
+                    async with session.post(f'{base_url}{endpoint}', json=payload) as resp:
+                        results[endpoint] = resp.status
+            except Exception as e:
+                results[endpoint] = f'ERROR: {e}'
+        
+        print('Smoke test results:')
+        for endpoint, status in results.items():
+            status_emoji = '✅' if str(status).startswith('2') else '❌'
+            print(f'{status_emoji} {endpoint}: {status}')
+        
+        # Check if all critical endpoints are working
+        critical_endpoints = ['/health', '/ai/generate']
+        all_critical_ok = all(str(results[e]).startswith('2') for e in critical_endpoints)
+        
+        if not all_critical_ok:
+            print('❌ Critical endpoints failed')
+            exit(1)
+        else:
+            print('✅ All smoke tests passed')
+
+asyncio.run(smoke_tests())
+        "
+    
+    - name: Load testing
+      run: |
+        python -c "
+import asyncio
+import aiohttp
+import time
+from concurrent.futures import ThreadPoolExecutor
+
+async def load_test():
+    base_url = 'https://synova-ai-production.up.railway.app'
+    concurrent_requests = 10
+    total_requests = 50
+    
+    async def single_request(session, request_id):
+        start_time = time.time()
+        try:
+            async with session.post(f'{base_url}/ai/generate', 
+                                  json={'prompt': f'Load test {request_id}', 'tier': 'synova-brain-v3.2'}) as resp:
+                await resp.text()
+                return time.time() - start_time
+        except:
+            return float('inf')
+    
+    async with aiohttp.ClientSession() as session:
+        # Run concurrent requests
+        tasks = []
+        for i in range(total_requests):
+            if len(tasks) >= concurrent_requests:
+                completed, tasks = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+                tasks = list(tasks)
+            
+            task = asyncio.create_task(single_request(session, i))
+            tasks.append(task)
+        
+        # Wait for remaining tasks
+        if tasks:
+            await asyncio.gather(*tasks)
+    
+    print('Load test completed')
+
+asyncio.run(load_test())
+        "
+
+  # Notification
+  notify:
+    runs-on: ubuntu-latest
+    needs: [post-deployment-tests]
+    if: always()
+    
+    steps:
+    - name: Notify deployment status
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow
+      if: always()

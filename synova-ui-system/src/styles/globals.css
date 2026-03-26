@@ -195,6 +195,7 @@
   .glass-primary,
   .glass-secondary {
     @apply bg-white text-black border border-gray-300;
+    -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
   
