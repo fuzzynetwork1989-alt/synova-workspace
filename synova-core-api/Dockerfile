@@ -1,4 +1,4 @@
-# Production Railway Dockerfile - FINAL PERMANENT FIX
+# Production Railway Dockerfile - ZERO PROBLEMS
 FROM python:3.11-slim
 
 # Set working directory
@@ -7,27 +7,20 @@ WORKDIR /app
 # Upgrade pip and ensure build tools
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Copy requirements first for better caching
-COPY requirements-railway.txt .
-
 # Install FastAPI first with verification
 RUN echo "Installing FastAPI..." && \
     pip install --no-cache-dir fastapi==0.104.1 && \
     echo "FastAPI installed successfully"
 
-# Install uvicorn
-RUN echo "Installing Uvicorn..." && \
-    pip install --no-cache-dir uvicorn[standard]==0.24.0 && \
-    echo "Uvicorn installed successfully"
-
-# Install pydantic
-RUN echo "Installing Pydantic..." && \
-    pip install --no-cache-dir pydantic==2.5.0 && \
-    echo "Pydantic installed successfully"
-
 # Install remaining dependencies
 RUN echo "Installing remaining dependencies..." && \
-    pip install --no-cache-dir python-multipart==0.0.6 redis==5.0.1 aiofiles==23.2.1 psutil==5.9.6 requests==2.31.0 && \
+    pip install --no-cache-dir uvicorn[standard]==0.24.0 && \
+    pip install --no-cache-dir pydantic==2.5.0 && \
+    pip install --no-cache-dir python-multipart==0.0.6 && \
+    pip install --no-cache-dir redis==5.0.1 && \
+    pip install --no-cache-dir aiofiles==23.2.1 && \
+    pip install --no-cache-dir psutil==5.9.6 && \
+    pip install --no-cache-dir requests==2.31.0 && \
     echo "All dependencies installed successfully"
 
 # Verify all installations
@@ -51,7 +44,7 @@ EXPOSE $PORT
 ENV PYTHONPATH=/app
 ENV PORT=$PORT
 
-# Health check with comprehensive error handling
+# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD python -c "
 import sys
@@ -65,22 +58,7 @@ try:
 except Exception as e:
     print(f'Health check error: {e}')
     sys.exit(0)
-" || exit 0
+"
 
-# Start application with comprehensive error handling
-CMD ["sh", "-c", "
-echo 'Starting Enhanced Synova Brain v3.2...'
-echo 'Python path:' $PYTHONPATH
-echo 'Port:' $PORT
-echo 'Working directory:' $(pwd)
-echo 'Files in directory:' && ls -la
-
-# Start main application
-python main.py 2>&1 | tee /tmp/app.log || \
-(echo 'Main application failed, checking for fallback...' && \
-python -c 'print(\"Enhanced Synova Brain v3.2 - Service running in degraded mode\")')
-
-# Keep container running even if application fails
-echo 'Container will continue running...'
-tail -f /tmp/app.log || echo 'No log file available'
-"]
+# Start application
+CMD ["python", "main.py"]
