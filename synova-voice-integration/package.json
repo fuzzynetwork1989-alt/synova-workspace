@@ -1,7 +1,7 @@
 {
-  "name": "@synova/voice-integration",
+  "name": "@synova/voice-integration-nodejs",
   "version": "4.1.0",
-  "description": "Synova AI Voice Integration - Whisper.js + MediaPipe for XR applications",
+  "description": "NODEJS VOICE INTEGRATION - NOT FOR PYTHON API - Synova AI Voice Integration - Whisper.js + MediaPipe for XR applications",
   "main": "dist/index.js",
   "scripts": {
     "dev": "next dev",

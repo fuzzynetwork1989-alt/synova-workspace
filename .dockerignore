@@ -4,6 +4,7 @@ synova-holo-renderer/
 synova-monitoring/
 synova-packages-supanova-sdk/
 synova-brain/
+synova-voice-integration/
 
 # Exclude Node.js files
 package.json
