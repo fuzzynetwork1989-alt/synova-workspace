@@ -1,0 +1,10 @@
+# Ignore Node.js projects - only build Python API
+synova-app-template/
+synova-holo-renderer/
+synova-monitoring/
+synova-packages-supanova-sdk/
+package.json
+package-lock.json
+node_modules/
+.next/
+dist/
