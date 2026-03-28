@@ -3,8 +3,8 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements_railway_fix.txt requirements.txt
-COPY main_railway_fix.py main.py
+COPY requirements.txt .
+COPY main.py .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
