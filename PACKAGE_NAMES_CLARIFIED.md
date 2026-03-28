@@ -3,6 +3,7 @@
 ## ✅ Package Files Renamed for Clarity
 
 ### **Root Package (Monorepo)**
+
 - **Before**: `synova-workspace`
 - **After**: `synova-workspace-monorepo-root`
 - **Description**: `MONOREPO ROOT - NOT FOR DEPLOYMENT`
@@ -10,21 +11,25 @@
 ### **Node.js Projects (Clearly Marked)**
 
 #### **App Template**
+
 - **Before**: `synova-app-template`
 - **After**: `synova-app-template-nodejs`
 - **Description**: `NODEJS TEMPLATE - NOT FOR PYTHON API`
 
 #### **Holo Renderer**
+
 - **Before**: `@synova/holo-renderer`
 - **After**: `@synova/holo-renderer-nodejs`
 - **Description**: `NODEJS LIBRARY - NOT FOR PYTHON API`
 
 #### **Monitoring**
+
 - **Before**: `@synova/monitoring`
 - **After**: `@synova/monitoring-nodejs`
 - **Description**: `NODEJS MONITORING - NOT FOR PYTHON API`
 
 ### **Python API (No Changes Needed)**
+
 - **Directory**: `synova-core-api`
 - **No package.json** (Python uses requirements.txt)
 - **Clear separation** from Node.js projects
@@ -32,18 +37,21 @@
 ## 🎯 Why This Helps
 
 ### **Railway Deployment**
+
 - ✅ **Clear distinction** between Node.js and Python projects
 - ✅ **No confusion** about what to build
 - ✅ **railway.json** points to Python API only
 - ✅ **.dockerignore** excludes all Node.js projects
 
 ### **Development Clarity**
+
 - ✅ **Package names** clearly indicate project type
 - ✅ **Descriptions** warn about deployment
 - ✅ **Monorepo structure** is obvious
 - ✅ **Python API** is isolated
 
 ### **CI/CD Pipeline**
+
 - ✅ **No npm install failures** on Python API
 - ✅ **Clear build targets**
 - ✅ **Proper service isolation**
@@ -79,7 +87,7 @@ With these clear names, Railway will:
 ## 📋 Next Steps
 
 1. **Configure Railway service** (if not done yet)
-2. **Deploy Python API** 
+2. **Deploy Python API**
 3. **Test health endpoint**
 4. **Verify API functionality**
 
