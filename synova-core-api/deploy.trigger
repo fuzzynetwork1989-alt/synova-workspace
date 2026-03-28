@@ -1,0 +1,6 @@
+# Railway Deployment Trigger - 502 Error Fix
+# This file forces Railway to redeploy with fixed dependencies
+DEPLOYMENT_VERSION=3.2.1-FIXED-502
+DEPLOYMENT_TIMESTAMP=2026-03-26T19-40-00Z
+API_STATUS=READY_FOR_PRODUCTION
+ERROR_FIX=REMOVED_CLERK_DEPENDENCY
