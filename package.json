@@ -1,7 +1,7 @@
 {
-  "name": "synova-workspace",
+  "name": "synova-workspace-monorepo-root",
   "version": "1.0.0",
-  "description": "Synova AI Workspace - Multi-project repository",
+  "description": "MONOREPO ROOT - NOT FOR DEPLOYMENT - Synova AI Workspace - Multi-project repository",
   "private": true,
   "workspaces": [
     "synova-app-template",
