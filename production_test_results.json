@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-03-26T07:07:17.208416",
+  "timestamp": "2026-03-28T00:51:50.780987",
   "production_url": "https://synova-ai-production.up.railway.app",
   "summary": {
     "passed": 0,
@@ -10,47 +10,47 @@
     {
       "test": "health",
       "status": "FAIL",
-      "error": 503
+      "error": 502
     },
     {
       "test": "generation",
       "status": "FAIL",
-      "error": 503
+      "error": 502
     },
     {
       "test": "streaming",
       "status": "FAIL",
-      "error": 503
+      "error": 502
     },
     {
       "test": "function_calling",
       "status": "FAIL",
-      "error": 503
+      "error": 502
     },
     {
       "test": "blueprint",
       "status": "FAIL",
-      "error": 503
+      "error": 502
     },
     {
       "test": "code_generation",
       "status": "FAIL",
-      "error": 503
+      "error": 502
     },
     {
       "test": "multimodal",
       "status": "FAIL",
-      "error": 503
+      "error": 502
     },
     {
       "test": "reasoning",
       "status": "FAIL",
-      "error": 503
+      "error": 502
     },
     {
       "test": "memory",
       "status": "FAIL",
-      "error": 503
+      "error": 502
     }
   ]
 }
