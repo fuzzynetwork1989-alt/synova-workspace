@@ -1,6 +1,6 @@
 /**
- * Health Check Endpoint for Synova Voice Integration
- * Provides health status for Railway deployment monitoring
+ * SYNOVA NEXUS Voice Integration Health Endpoint
+ * Health check endpoint for Railway deployment monitoring
  */
 
 export default async function handler(req, res) {
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       timestamp: timestamp,
       uptime: process.uptime(),
       version: '1.0.0',
-      service: 'synova-voice-integration',
+      service: 'SYNOVA NEXUS Voice Integration',
       environment: process.env.NODE_ENV || 'development',
       memory: {
         used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100), // MB
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     if (isHealthy) {
       res.status(200).json({
         ...healthChecks,
-        message: 'Synova Voice Integration is healthy and ready to serve requests'
+        message: 'SYNOVA NEXUS Voice Integration is healthy and ready to serve requests'
       });
     } else {
       res.status(503).json({
