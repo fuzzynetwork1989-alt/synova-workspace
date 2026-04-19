@@ -732,11 +732,14 @@ class SynovaBrainV5:
         }
 
 # Factory function
-def create_synova_brain_v5() -> SynovaBrainV5:
+from synova_brain.synova_brain_v5 import SynovaBrainV5
+
+def create_synova_brain_v5():
     """Create Synova Brain v5.0 instance"""
     return SynovaBrainV5()
 
 # Test function
+
 async def test_synova_brain_v5():
     """Test the emergent cognition system"""
     brain = create_synova_brain_v5()

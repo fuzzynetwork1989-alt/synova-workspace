@@ -48,7 +48,8 @@ class CascadeOperation:
 
 class CascadeIntegration:
     """Windsurf/Cascade integration for SYNOVA NEXUS"""
-    
+
+
     def __init__(self, workspace_root: str):
         self.workspace_root = workspace_root
         self.operation_queue: List[CascadeOperation] = []
