@@ -1,6 +1,8 @@
 """
-SYNOVA BRAIN v5.0 - Emergent Cognition Architecture
-A self-organizing, self-evolving cognitive ecosystem
+SYNOVA NEXUS - Advanced AI Development System
+
+This module implements the core SYNOVA NEXUS system with advanced cognitive capabilities,
+multi-agent orchestration, and autonomous software development features.
 """
 
 import asyncio

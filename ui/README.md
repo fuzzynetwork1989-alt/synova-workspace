@@ -1,6 +1,6 @@
-# SYNOVA SUPREME AUTOPILOT MODE - Advanced UI
+# SYNOVA NEXUS UI
 
-A modern, production-ready interface for the SYNOVA AI ecosystem with comprehensive features and professional UX.
+A modern, responsive React interface for the SYNOVA NEXUS ecosystem with comprehensive features and professional UX.
 
 ## 🚀 Features
 

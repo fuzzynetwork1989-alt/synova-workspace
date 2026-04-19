@@ -236,11 +236,18 @@ export default function HomePage() {
                     </div>
                   </div>
                 ))}
-              </div>
             </div>
           </div>
+        </div>
 
-          {/* Messages */}
+        {/* Messages */}
+        <div className="text-center py-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            SYNOVA NEXUS
+          </h1>
+          <p className="text-lg text-gray-600 mb-8">
+            AI-Powered Development Ecosystem
+          </p>
           <div className="flex-1 flex flex-col">
             <div className="flex-1 p-6 space-y-4 overflow-y-auto">
               {/* Welcome Message */}
