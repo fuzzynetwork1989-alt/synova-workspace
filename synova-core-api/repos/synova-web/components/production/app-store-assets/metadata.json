@@ -1,0 +1,74 @@
+{
+  "name": "Synova AI",
+  "shortName": "Synova",
+  "description": "Advanced AI-powered multi-tenant platform for intelligent automation and collaboration",
+  "category": "Productivity",
+  "subcategory": "Business",
+  "version": "1.0.0",
+  "buildNumber": "1",
+  "minimumOsVersion": "14.0",
+  "supportedPlatforms": ["ios", "android", "web"],
+  "appStoreUrl": "https://apps.apple.com/app/synova-ai",
+  "playStoreUrl": "https://play.google.com/store/apps/details?id=com.synova.ai",
+  "website": "https://synova.ai",
+  "support": "support@synova.ai",
+  "privacy": "https://synova.ai/privacy",
+  "terms": "https://synova.ai/terms",
+  "features": [
+    "AI-powered chat and automation",
+    "Multi-tenant workspace management",
+    "Real-time collaboration",
+    "Advanced security and privacy",
+    "Cross-platform synchronization",
+    "Custom AI agent creation",
+    "Enterprise-grade infrastructure"
+  ],
+  "screenshots": [
+    {
+      "title": "Dashboard Overview",
+      "description": "Main dashboard with AI assistant and workspace management"
+    },
+    {
+      "title": "AI Chat Interface",
+      "description": "Advanced conversational AI with context awareness"
+    },
+    {
+      "title": "Workspace Management",
+      "description": "Organize teams and projects with intelligent automation"
+    },
+    {
+      "title": "Settings & Configuration",
+      "description": "Customizable preferences and API integrations"
+    }
+  ],
+  "keywords": [
+    "AI", "automation", "productivity", "collaboration", "business", "enterprise", 
+    "chatbot", "assistant", "workspace", "team", "intelligent", "multi-tenant"
+  ],
+  "contentRating": "Everyone",
+  "languages": ["en", "es", "fr", "de", "ja", "zh", "ko"],
+  "pricing": {
+    "model": "freemium",
+    "trialDays": 14,
+    "subscriptionPlans": [
+      {
+        "name": "Starter",
+        "price": "$9.99",
+        "period": "month",
+        "features": ["Basic AI features", "5 workspaces", "10GB storage"]
+      },
+      {
+        "name": "Professional",
+        "price": "$29.99",
+        "period": "month",
+        "features": ["Advanced AI", "Unlimited workspaces", "100GB storage", "Priority support"]
+      },
+      {
+        "name": "Enterprise",
+        "price": "Custom",
+        "period": "month",
+        "features": ["Custom AI models", "Unlimited everything", "Dedicated support", "SLA guarantee"]
+      }
+    ]
+  }
+}
