@@ -11,11 +11,13 @@ import uvicorn
 import os
 from datetime import datetime
 import sys
-import os
 
-# Import the enhanced brain
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from enhanced_brain import create_enhanced_synova_brain
+# Add current directory to Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, current_dir)
+
+# Import the advanced brain
+from advanced_synova_brain import create_advanced_synova_brain
 
 # Initialize FastAPI app
 app = FastAPI(
