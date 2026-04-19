@@ -1,6 +1,6 @@
 """
 SYNOVA SUPREME AUTOPILOT MODE - Windsurf/Cascade Integration Skills
-Integration layer for autonomous production build engine with Windsurf/Cascade workflows.
+Integration layer for synova_nexus_modeus production build engine with Windsurf/Cascade workflows.
 """
 
 import os
@@ -10,6 +10,7 @@ import subprocess
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from enum import Enum
+from synova_brain.synova_brain_v5 import SynovaNexusEngine
 import logging
 
 # Configure logging
@@ -46,7 +47,7 @@ class CascadeOperation:
     safe_to_auto_run: bool = False
 
 class CascadeIntegration:
-    """Windsurf/Cascade integration for AutopilotEngine"""
+    """Windsurf/Cascade integration for SYNOVA NEXUS"""
     
     def __init__(self, workspace_root: str):
         self.workspace_root = workspace_root
@@ -54,7 +55,7 @@ class CascadeIntegration:
         self.completed_operations: List[CascadeOperation] = []
         self.failed_operations: List[CascadeOperation] = []
         
-        logger.info("CascadeIntegration initialized for Windsurf/Cascade")
+        logger.info("SYNOVA NEXUS integration initialized")
     
     async def execute_build_plan(self, build_plan) -> List[CascadeOperation]:
         """Convert build plan to Cascade operations"""
