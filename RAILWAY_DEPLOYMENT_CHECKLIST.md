@@ -3,6 +3,7 @@
 ## Pre-Deployment Checklist
 
 ### Repository Preparation
+
 - [ ] All services have proper Dockerfiles
 - [ ] All package.json files have build/start scripts
 - [ ] Environment variables documented
@@ -12,6 +13,7 @@
 ### Service Configuration Verification
 
 #### synova-core-api
+
 - [ ] Dockerfile exists and is valid
 - [ ] requirements.txt includes all dependencies
 - [ ] PORT environment variable handled in code
@@ -19,6 +21,7 @@
 - [ ] Main.py listens on correct port
 
 #### synova-ui-system
+
 - [ ] Dockerfile exists and is valid
 - [ ] package.json has build/start scripts
 - [ ] Next.js configuration is production-ready
@@ -26,6 +29,7 @@
 - [ ] Environment variables for API URL
 
 #### synova-holo-renderer
+
 - [ ] Dockerfile exists and is valid
 - [ ] package.json has build/start scripts
 - [ ] Express server setup correctly
@@ -33,6 +37,7 @@
 - [ ] Babylon.js dependencies resolved
 
 #### synova-monitoring
+
 - [ ] Dockerfile exists and is valid
 - [ ] package.json has build/start scripts
 - [ ] TypeScript compilation works
@@ -40,6 +45,7 @@
 - [ ] Monitoring services configured
 
 #### synova-revenue
+
 - [ ] Dockerfile exists and is valid
 - [ ] package.json has build/start scripts
 - [ ] Stripe configuration ready
@@ -47,6 +53,7 @@
 - [ ] Webhook endpoints secured
 
 #### synova-voice-integration
+
 - [ ] Dockerfile exists and is valid
 - [ ] package.json has build/start scripts
 - [ ] Next.js configuration for voice features
@@ -56,12 +63,14 @@
 ## Deployment Steps
 
 ### Step 1: Railway Setup
+
 - [ ] Railway account created
 - [ ] GitHub connected to Railway
 - [ ] Repository selected: `fuzzynetwork1989-alt/synova-workspace`
 - [ ] Branch selected: `main`
 
 ### Step 2: Deploy Core API
+
 - [ ] New Service created
 - [ ] Root Directory: `synova-core-api`
 - [ ] Environment variables set:
@@ -80,11 +89,12 @@
 - [ ] Health endpoint responding
 
 ### Step 3: Deploy UI System
+
 - [ ] New Service created
 - [ ] Root Directory: `synova-ui-system`
 - [ ] Environment variables set:
   - [ ] NODE_ENV=production
-  - [ ] NEXT_PUBLIC_API_URL=https://synova-core-api-production.up.railway.app
+  - [ ] NEXT_PUBLIC_API_URL=<https://synova-core-api-production.up.railway.app>
   - [ ] PORT=3000
 - [ ] Health check configured: `/`
 - [ ] Restart policy: ON_FAILURE, 10 retries
@@ -92,36 +102,39 @@
 - [ ] Frontend loads correctly
 
 ### Step 4: Deploy Holo Renderer
+
 - [ ] New Service created
 - [ ] Root Directory: `synova-holo-renderer`
 - [ ] Environment variables set:
   - [ ] NODE_ENV=production
   - [ ] PORT=3001
-  - [ ] API_URL=https://synova-core-api-production.up.railway.app
+  - [ ] API_URL=<https://synova-core-api-production.up.railway.app>
 - [ ] Health check configured: `/health`
 - [ ] Restart policy: ON_FAILURE, 10 retries
 - [ ] Deployment successful
 - [ ] 3D rendering service responding
 
 ### Step 5: Deploy Monitoring
+
 - [ ] New Service created
 - [ ] Root Directory: `synova-monitoring`
 - [ ] Environment variables set:
   - [ ] NODE_ENV=production
   - [ ] PORT=3002
-  - [ ] API_URL=https://synova-core-api-production.up.railway.app
+  - [ ] API_URL=<https://synova-core-api-production.up.railway.app>
 - [ ] Health check configured: `/health`
 - [ ] Restart policy: ON_FAILURE, 10 retries
 - [ ] Deployment successful
 - [ ] Monitoring dashboard accessible
 
 ### Step 6: Deploy Revenue
+
 - [ ] New Service created
 - [ ] Root Directory: `synova-revenue`
 - [ ] Environment variables set:
   - [ ] NODE_ENV=production
   - [ ] PORT=3003
-  - [ ] API_URL=https://synova-core-api-production.up.railway.app
+  - [ ] API_URL=<https://synova-core-api-production.up.railway.app>
   - [ ] STRIPE_SECRET_KEY=***
   - [ ] STRIPE_WEBHOOK_SECRET=***
 - [ ] Health check configured: `/health`
@@ -130,12 +143,13 @@
 - [ ] Payment processing working
 
 ### Step 7: Deploy Voice Integration
+
 - [ ] New Service created
 - [ ] Root Directory: `synova-voice-integration`
 - [ ] Environment variables set:
   - [ ] NODE_ENV=production
   - [ ] PORT=3004
-  - [ ] API_URL=https://synova-core-api-production.up.railway.app
+  - [ ] API_URL=<https://synova-core-api-production.up.railway.app>
 - [ ] Health check configured: `/health`
 - [ ] Restart policy: ON_FAILURE, 10 retries
 - [ ] Deployment successful
@@ -144,6 +158,7 @@
 ## Post-Deployment Verification
 
 ### Health Check Tests
+
 ```bash
 # Test all services
 curl https://synova-core-api-production.up.railway.app/health
@@ -162,6 +177,7 @@ curl https://synova-voice-integration-production.up.railway.app/health
 - [ ] Voice integration working
 
 ### Integration Tests
+
 - [ ] Frontend can communicate with API
 - [ ] Authentication flow works
 - [ ] File upload functionality works
@@ -171,6 +187,7 @@ curl https://synova-voice-integration-production.up.railway.app/health
 - [ ] Voice recognition operational
 
 ### Performance Checks
+
 - [ ] Response times under 2 seconds
 - [ ] No 502 errors
 - [ ] Memory usage within limits
@@ -179,24 +196,28 @@ curl https://synova-voice-integration-production.up.railway.app/health
 ## Production Optimization
 
 ### Custom Domains
+
 - [ ] Custom domains configured
 - [ ] DNS records set up
 - [ ] SSL certificates active
 - [ ] Domain redirects working
 
 ### Scaling Configuration
+
 - [ ] Instance sizes optimized
 - [ ] Auto-scaling rules set
 - [ ] Load balancing configured
 - [ ] Resource limits defined
 
 ### Monitoring Setup
+
 - [ ] Railway metrics enabled
 - [ ] Custom dashboards created
 - [ ] Alert rules configured
 - [ ] Log aggregation working
 
 ### Security Configuration
+
 - [ ] HTTPS enforced
 - [ ] CORS properly configured
 - [ ] API keys secured
@@ -207,24 +228,28 @@ curl https://synova-voice-integration-production.up.railway.app/health
 ### Common Issues and Solutions
 
 #### 502 Bad Gateway
+
 - [ ] Check environment variables
 - [ ] Verify PORT configuration
 - [ ] Review deployment logs
 - [ ] Test health endpoint locally
 
 #### Build Failures
+
 - [ ] Check Dockerfile syntax
 - [ ] Verify dependencies
 - [ ] Review build logs
 - [ ] Test build locally
 
 #### Service Communication
+
 - [ ] Verify API URLs
 - [ ] Check network policies
 - [ ] Test service connectivity
 - [ ] Review CORS settings
 
 #### Performance Issues
+
 - [ ] Monitor resource usage
 - [ ] Check for memory leaks
 - [ ] Optimize database queries
@@ -233,12 +258,14 @@ curl https://synova-voice-integration-production.up.railway.app/health
 ## Emergency Procedures
 
 ### Service Recovery
+
 - [ ] Restart failed services
 - [ ] Rollback to previous deployment
 - [ ] Scale up resources
 - [ ] Enable maintenance mode
 
 ### Data Recovery
+
 - [ ] Database backups verified
 - [ ] File storage checked
 - [ ] User data integrity confirmed
@@ -247,12 +274,14 @@ curl https://synova-voice-integration-production.up.railway.app/health
 ## Documentation Updates
 
 ### Post-Deployment
+
 - [ ] Update API documentation
 - [ ] Document production URLs
 - [ ] Update environment variable guide
 - [ ] Create troubleshooting guide
 
 ### Team Communication
+
 - [ ] Deployment summary sent
 - [ ] Access credentials shared
 - [ ] Monitoring access granted
@@ -263,6 +292,7 @@ curl https://synova-voice-integration-production.up.railway.app/health
 ## Final Verification
 
 ### Complete System Test
+
 - [ ] All services deployed and healthy
 - [ ] Full user journey tested
 - [ ] Performance benchmarks met
