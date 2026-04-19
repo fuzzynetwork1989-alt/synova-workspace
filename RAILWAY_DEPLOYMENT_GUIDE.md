@@ -1,41 +1,48 @@
 # Railway Individual Service Deployment Guide
 
 ## Overview
+
 This guide walks through deploying each Synova AI service as an individual Railway app for better scaling and management.
 
 ## Services to Deploy
 
 ### 1. synova-core-api (Python FastAPI Backend)
+
 - **Purpose**: AI generation, authentication, file upload
 - **Port**: 8000
 - **Health Check**: `/health`
 - **Dockerfile**: Available
 
 ### 2. synova-ui-system (Next.js Frontend)
+
 - **Purpose**: Main web interface
 - **Port**: 3000
 - **Health Check**: `/` (root)
 - **Dockerfile**: Available
 
 ### 3. synova-holo-renderer (3D Rendering Service)
+
 - **Purpose**: 3D blueprint rendering
 - **Port**: 3001
 - **Health Check**: `/health`
 - **Dockerfile**: Available
 
 ### 4. synova-monitoring (Monitoring Service)
+
 - **Purpose**: System monitoring and metrics
 - **Port**: 3002
 - **Health Check**: `/health`
 - **Dockerfile**: Available
 
 ### 5. synova-revenue (Revenue Management)
+
 - **Purpose**: Stripe integration and billing
 - **Port**: 3003
 - **Health Check**: `/health`
 - **Dockerfile**: Available
 
 ### 6. synova-voice-integration (Voice Service)
+
 - **Purpose**: Voice processing and integration
 - **Port**: 3004
 - **Health Check**: `/health`
@@ -63,6 +70,7 @@ This guide walks through deploying each Synova AI service as an individual Railw
 5. Click "Deploy Service"
 
 **Environment Variables for synova-core-api:**
+
 ```
 PORT=8000
 PYTHONUNBUFFERED=1
@@ -84,6 +92,7 @@ SESSION_SECRET=your_session_secret_32_chars_min
 5. Click "Deploy Service"
 
 **Environment Variables for synova-ui-system:**
+
 ```
 NODE_ENV=production
 NEXT_PUBLIC_API_URL=https://synova-core-api-production.up.railway.app
@@ -99,6 +108,7 @@ PORT=3000
 5. Click "Deploy Service"
 
 **Environment Variables for synova-holo-renderer:**
+
 ```
 NODE_ENV=production
 PORT=3001
@@ -114,6 +124,7 @@ API_URL=https://synova-core-api-production.up.railway.app
 5. Click "Deploy Service"
 
 **Environment Variables for synova-monitoring:**
+
 ```
 NODE_ENV=production
 PORT=3002
@@ -129,6 +140,7 @@ API_URL=https://synova-core-api-production.up.railway.app
 5. Click "Deploy Service"
 
 **Environment Variables for synova-revenue:**
+
 ```
 NODE_ENV=production
 PORT=3003
@@ -146,6 +158,7 @@ STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 5. Click "Deploy Service"
 
 **Environment Variables for synova-voice-integration:**
+
 ```
 NODE_ENV=production
 PORT=3004
@@ -157,16 +170,19 @@ API_URL=https://synova-core-api-production.up.railway.app
 For each service, go to **Settings** > **Health Checks**:
 
 **synova-core-api:**
+
 - Path: `/health`
 - Timeout: 100ms
 - Retries: 3
 
 **synova-ui-system:**
+
 - Path: `/`
 - Timeout: 100ms
 - Retries: 3
 
 **All other services:**
+
 - Path: `/health`
 - Timeout: 100ms
 - Retries: 3
@@ -174,6 +190,7 @@ For each service, go to **Settings** > **Health Checks**:
 ### Step 4: Set Restart Policy
 
 For each service, go to **Settings** > **Restart Policy**:
+
 - Type: `ON_FAILURE`
 - Max Retries: `10`
 
@@ -215,23 +232,27 @@ Voice: https://synova-voice-integration-production.up.railway.app
 ## Troubleshooting
 
 ### 502 Bad Gateway
+
 - Check environment variables
 - Verify PORT setting
 - Check health endpoint
 - Review logs: `railway logs`
 
 ### Build Failures
+
 - Check Dockerfile syntax
 - Verify requirements.txt (Python services)
 - Check package.json (Node.js services)
 - Review build logs
 
 ### Port Issues
+
 - Ensure PORT environment variable is set
 - Check service is listening on Railway port
 - Verify health check path
 
 ### Service Communication
+
 - Update API URLs in environment variables
 - Check service-to-service connectivity
 - Verify CORS settings
@@ -239,16 +260,19 @@ Voice: https://synova-voice-integration-production.up.railway.app
 ## Production Optimization
 
 ### Add Custom Domains
+
 1. Go to **Settings** > **Domains**
 2. Add custom domain for each service
 3. Configure DNS records
 
 ### Scale Services
+
 1. Go to **Settings** > **Scaling**
 2. Adjust instance count and memory per service
 3. Set auto-scaling rules
 
 ### Set Up Monitoring
+
 1. Enable Railway metrics
 2. Configure health checks
 3. Set up alerting rules
@@ -256,11 +280,13 @@ Voice: https://synova-voice-integration-production.up.railway.app
 ## Security Considerations
 
 ### Environment Variables
+
 - Never commit secrets to git
 - Use Railway's encrypted environment variables
 - Rotate API keys regularly
 
 ### Network Security
+
 - Enable Railway's built-in HTTPS
 - Configure CORS properly
 - Use Railway's private networking for service-to-service communication
@@ -268,11 +294,13 @@ Voice: https://synova-voice-integration-production.up.railway.app
 ## Cost Management
 
 ### Free Tier Limits
+
 - Railway offers $5/month free credit
 - Each service uses some credit
 - Monitor usage in Railway dashboard
 
 ### Optimization Tips
+
 - Scale down unused services
 - Use appropriate instance sizes
 - Monitor logs for optimization opportunities
@@ -280,6 +308,7 @@ Voice: https://synova-voice-integration-production.up.railway.app
 ## Next Steps
 
 After deployment:
+
 1. Test all functionality
 2. Set up monitoring and alerting
 3. Configure custom domains
