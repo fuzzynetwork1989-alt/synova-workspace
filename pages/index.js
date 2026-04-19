@@ -3,10 +3,48 @@ import Head from 'next/head';
 
 export default function Home() {
   const [status, setStatus] = useState('loading');
+  const [apiStatus, setApiStatus] = useState('checking');
+  const [aiResponse, setAiResponse] = useState('');
+
+  // Production API URL
+  const API_URL = 'https://synova-core-api-production-65d1.up.railway.app';
 
   useEffect(() => {
     setStatus('ready');
+    checkApiHealth();
   }, []);
+
+  const checkApiHealth = async () => {
+    try {
+      const response = await fetch(`${API_URL}/health`);
+      const data = await response.json();
+      setApiStatus(data.status === 'healthy' ? 'connected' : 'error');
+      console.log('🧠 API Status:', data);
+    } catch (error) {
+      setApiStatus('error');
+      console.error('❌ API connection failed:', error);
+    }
+  };
+
+  const testAIGeneration = async () => {
+    try {
+      setAiResponse('Thinking...');
+      const response = await fetch(`${API_URL}/ai/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: 'Design a modern warehouse with smart features'
+        }),
+      });
+      const data = await response.json();
+      setAiResponse(data.response || 'No response received');
+    } catch (error) {
+      setAiResponse('Error: ' + error.message);
+      console.error('❌ AI generation failed:', error);
+    }
+  };
 
   return (
     <>
@@ -24,8 +62,22 @@ export default function Home() {
           
           <div className="status">
             <p>📊 Status: <strong>{status}</strong></p>
-            <p>🎯 All systems operational</p>
-            <p>⚡ Ready for deployment</p>
+            <p>� API: <strong>{apiStatus}</strong></p>
+            <p>�🎯 All systems operational</p>
+            <p>⚡ Production ready</p>
+          </div>
+
+          <div className="api-test">
+            <h3>🧠 Test AI Brain</h3>
+            <button onClick={testAIGeneration} className="ai-button">
+              Generate Architecture Design
+            </button>
+            {aiResponse && (
+              <div className="ai-response">
+                <h4>AI Response:</h4>
+                <p>{aiResponse}</p>
+              </div>
+            )}
           </div>
 
           <div className="grid">
