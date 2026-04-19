@@ -46,6 +46,12 @@ synova-workspace/
 |   |-- package.json
 |   `-- pages/api/health.js
 |
+|-- synova-brain/             # Python FastAPI (Port 8001)
+|   |-- Dockerfile
+|   |-- main.py
+|   |-- requirements.txt
+|   `-- enhanced_brain.py
+|
 |-- Railway Deployment Files
 |   |-- RAILWAY_DEPLOYMENT_GUIDE.md
 |   |-- RAILWAY_DEPLOYMENT_CHECKLIST.md
@@ -68,6 +74,7 @@ synova-workspace/
 | synova-monitoring | 3002 | `/health` | Node.js 18-alpine | Ready |
 | synova-revenue | 3003 | `/health` | Node.js 18-alpine | Ready |
 | synova-voice-integration | 3004 | `/health` | Node.js 18-alpine | Ready |
+| synova-brain | 8001 | `/health` | Python 3.11-slim | Ready |
 
 ### GitHub Repository Configuration
 
@@ -148,7 +155,7 @@ For each service:
 2. Test all endpoints
 3. Verify integrations
 
-### Expected Production URLs
+### Expected URLs After Deployment
 ```
 Core API: https://synova-core-api-production.up.railway.app
 Frontend: https://synova-ui-system-production.up.railway.app
@@ -156,6 +163,7 @@ Renderer: https://synova-holo-renderer-production.up.railway.app
 Monitoring: https://synova-monitoring-production.up.railway.app
 Revenue: https://synova-revenue-production.up.railway.app
 Voice: https://synova-voice-integration-production.up.railway.app
+Brain: https://synova-brain-production.up.railway.app
 ```
 
 ### Repository Health Check

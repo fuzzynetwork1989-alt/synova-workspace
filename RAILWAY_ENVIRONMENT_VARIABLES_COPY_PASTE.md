@@ -51,6 +51,16 @@ PORT=3004
 API_URL=https://synova-core-api-production.up.railway.app
 ```
 
+## synova-brain Environment Variables
+```
+PORT=8001
+MODEL_NAME=microsoft/DialoGPT-medium
+DEVICE=cpu
+ENVIRONMENT=production
+NODE_ENV=production
+LOG_LEVEL=info
+```
+
 ## Instructions:
 1. Copy each section above
 2. Go to Railway service settings

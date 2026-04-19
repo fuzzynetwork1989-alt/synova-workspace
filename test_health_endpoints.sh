@@ -30,6 +30,10 @@ curl -f https://synova-revenue-production.up.railway.app/health || echo "FAILED:
 echo "6. Testing synova-voice-integration..."
 curl -f https://synova-voice-integration-production.up.railway.app/health || echo "FAILED: Voice Integration health check failed"
 
+# Test Brain
+echo "7. Testing synova-brain..."
+curl -f https://synova-brain-production.up.railway.app/health || echo "FAILED: Brain health check failed"
+
 echo "=========================================="
 echo "Health check testing complete!"
 echo "If any tests failed, check the Railway deployment logs."
