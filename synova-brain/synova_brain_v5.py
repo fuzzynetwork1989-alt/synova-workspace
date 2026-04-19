@@ -16,13 +16,11 @@ from enum import Enum
 import numpy as np
 import logging
 
-# Import autopilot engine for integration
+# Import cascade integration for SYNOVA NEXUS
 try:
-    from ..windsurf.skills.autopilot_engine import AutopilotEngine, ProjectType, StackChoice
+    from ..windsurf.skills.cascade_integration import CascadeIntegration
 except ImportError:
-    AutopilotEngine = None
-    ProjectType = None
-    StackChoice = None
+    CascadeIntegration = None
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
