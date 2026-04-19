@@ -1,36 +1,63 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Head from 'next/head';
 
 export default function Home() {
   const [status, setStatus] = useState('loading');
   const [apiStatus, setApiStatus] = useState('checking');
   const [aiResponse, setAiResponse] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Production API URL
-  const API_URL = 'https://synova-core-api-production-65d1.up.railway.app';
+  // Production API URL from environment
+  const API_URL = useMemo(() => 
+    process.env.NEXT_PUBLIC_API_URL || 'https://synova-core-api-production-65d1.up.railway.app'
+  , []);
 
   useEffect(() => {
     setStatus('ready');
     checkApiHealth();
-  }, []);
+  }, [checkApiHealth]);
 
-  const checkApiHealth = async () => {
+  const checkApiHealth = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/health`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      const response = await fetch(`${API_URL}/health`, {
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       setApiStatus(data.status === 'healthy' ? 'connected' : 'error');
       console.log('🧠 API Status:', data);
     } catch (error) {
       setApiStatus('error');
-      console.error('❌ API connection failed:', error);
+      const errorMessage = error.name === 'AbortError' ? 'Request timeout' : error.message;
+      console.error('❌ API connection failed:', errorMessage);
     }
-  };
+  }, [API_URL]);
 
-  const testAIGeneration = async () => {
+  const testAIGeneration = useCallback(async () => {
+    if (isLoading) return; // Prevent multiple simultaneous requests
+    
     try {
+      setIsLoading(true);
       setAiResponse('Thinking...');
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout for AI generation
+      
       const response = await fetch(`${API_URL}/ai/generate`, {
         method: 'POST',
+        signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -38,13 +65,29 @@ export default function Home() {
           prompt: 'Design a modern warehouse with smart features'
         }),
       });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
+      
+      // Validate response structure
+      if (!data || typeof data !== 'object') {
+        throw new Error('Invalid response format');
+      }
+      
       setAiResponse(data.response || 'No response received');
     } catch (error) {
-      setAiResponse('Error: ' + error.message);
-      console.error('❌ AI generation failed:', error);
+      const errorMessage = error.name === 'AbortError' ? 'Request timeout - please try again' : error.message;
+      setAiResponse('Error: ' + errorMessage);
+      console.error('❌ AI generation failed:', errorMessage);
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [API_URL, isLoading]);
 
   return (
     <>
@@ -69,8 +112,8 @@ export default function Home() {
 
           <div className="api-test">
             <h3>🧠 Test AI Brain</h3>
-            <button onClick={testAIGeneration} className="ai-button">
-              Generate Architecture Design
+            <button onClick={testAIGeneration} className="ai-button" disabled={isLoading}>
+              {isLoading ? 'Generating...' : 'Generate Architecture Design'}
             </button>
             {aiResponse && (
               <div className="ai-response">
