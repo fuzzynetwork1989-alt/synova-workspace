@@ -10,7 +10,7 @@ import subprocess
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from enum import Enum
-from synova_brain.synova_brain_v5 import SynovaNexusEngine
+from .synova_brain.synova_brain_v5 import SynovaBrainV5NexusEngine
 import logging
 
 # Configure logging
