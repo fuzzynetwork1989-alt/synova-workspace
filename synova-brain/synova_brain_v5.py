@@ -1,16 +1,14 @@
 """
 SYNOVA NEXUS - Advanced AI Development System
 
-This module implements the core SYNOVA NEXUS system with advanced cognitive capabilities,
-multi-agent orchestration, and autonomous software development features.
+This module implements the core SYNOVA NEXUS system with advanced cognitive 
+capabilities, multi-agent orchestration, and autonomous software development features.
 """
 
 import asyncio
-import json
-import time
 import uuid
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Tuple, Union
+from datetime import datetime
+from typing import Dict, List, Any
 from dataclasses import dataclass, field
 from enum import Enum
 import numpy as np
@@ -709,7 +707,6 @@ class SynovaBrainV5:
         }
 
 # Factory function
-from synova_brain.synova_brain_v5 import SynovaBrainV5
 
 def create_synova_brain_v5():
     """Create Synova Brain v5.0 instance"""
