@@ -1,0 +1,54 @@
+# Synova AI - Complete Dependencies
+# Bootstrap Track - Production-ready implementation
+
+# Core Framework
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+pydantic==2.9.2
+pydantic-settings==2.6.0
+
+# Database
+supabase==2.10.0
+vecs==0.4.3
+redis==5.2.0
+
+# LLM Providers
+openai==1.59.6
+anthropic==0.42.0
+google-generativeai==0.8.3
+langchain==0.3.14
+langchain-core==0.3.28
+langchain-openai==0.3.3
+langchain-anthropic==0.3.3
+langchain-community==0.3.14
+
+# Multi-Agent Orchestration
+langgraph==0.3.5
+
+# Billing
+stripe==11.4.1
+
+# HTTP Clients
+httpx==0.28.1
+
+# File Processing
+pypdf==5.1.0
+
+# Authentication
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.20
+
+# Logging & Monitoring
+structlog==24.4.0
+
+# Utilities
+python-dotenv==1.0.1
+orjson==3.10.12
+
+# Development
+pytest==8.3.3
+pytest-asyncio==0.24.0
+black==24.10.0
+ruff==0.8.0
+mypy==1.13.0
