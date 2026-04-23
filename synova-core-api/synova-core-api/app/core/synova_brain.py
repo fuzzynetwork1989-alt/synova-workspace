@@ -18,6 +18,17 @@ import re
 import math
 import random
 import string
+import sys
+import os
+
+# Add the synova brain reasoning loops to the path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'synova', 'brain'))
+try:
+    from reasoning_loops import SuperReasoningEngine, create_super_reasoning_engine
+except ImportError:
+    logger.warning("SuperReasoningEngine not found in synova/brain/reasoning_loops.py")
+    SuperReasoningEngine = None
+    create_super_reasoning_engine = None
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -167,6 +178,17 @@ class SynovaBrain:
         self.problem_solver = self._init_problem_solver()
         self.conversation_manager = self._init_conversation_manager()
         self.ethics_framework = self._init_ethics_framework()
+        
+        # Super Reasoning Engine Integration
+        self.super_reasoning_engine = None
+        if SuperReasoningEngine:
+            self.super_reasoning_engine = create_super_reasoning_engine(
+                agent_base=self,
+                tools=self._get_available_tools()
+            )
+            logger.info("SuperReasoningEngine integrated successfully")
+        else:
+            logger.warning("SuperReasoningEngine not available - using fallback reasoning")
         
         # Performance Metrics
         self.response_quality_history = deque(maxlen=1000)
@@ -506,7 +528,10 @@ class SynovaBrain:
 
     async def _determine_strategy(self, analysis: Dict) -> str:
         """Determine the best processing strategy based on request analysis"""
-        if analysis["complexity"] > 0.8:
+        # Use super reasoning for complex queries or when available
+        if self.super_reasoning_engine and (analysis["complexity"] > 0.6 or analysis.get("requires_deep_reasoning", False)):
+            return "super_reasoning"
+        elif analysis["complexity"] > 0.8:
             return "deep_reasoning"
         elif analysis["domain"] in ["research", "analysis"]:
             return "research_focused"
@@ -519,7 +544,9 @@ class SynovaBrain:
 
     async def _execute_pipeline(self, request: str, strategy: str, context: Optional[Dict]) -> Dict:
         """Execute the appropriate processing pipeline"""
-        if strategy == "deep_reasoning":
+        if strategy == "super_reasoning":
+            return await self._super_reasoning_pipeline(request, context)
+        elif strategy == "deep_reasoning":
             return await self._deep_reasoning_pipeline(request, context)
         elif strategy == "research_focused":
             return await self._research_pipeline(request, context)
@@ -724,6 +751,69 @@ class SynovaBrain:
             "reasoning": standard_steps,
             "capabilities_used": capabilities_used,
         }
+
+    def _get_available_tools(self) -> Dict[str, Any]:
+        """Get available tools for SuperReasoningEngine"""
+        tools = {}
+        
+        # Add reasoning engine tools
+        if hasattr(self, 'reasoning_engine'):
+            tools.update(self.reasoning_engine)
+        
+        # Add language processor tools
+        if hasattr(self, 'language_processor'):
+            tools.update(self.language_processor)
+        
+        # Add research engine tools
+        if hasattr(self, 'research_engine'):
+            tools.update(self.research_engine)
+        
+        # Add code generator tools
+        if hasattr(self, 'code_generator'):
+            tools.update(self.code_generator)
+        
+        return tools
+
+    async def _super_reasoning_pipeline(self, request: str, context: Optional[Dict]) -> Dict:
+        """Super Reasoning Engine pipeline with 6-step loop"""
+        if not self.super_reasoning_engine:
+            # Fallback to standard pipeline
+            return await self._standard_pipeline(request, context)
+        
+        capabilities_used = []
+        
+        try:
+            # Execute the super reasoning loop
+            reasoning_state = await self.super_reasoning_engine.execute_reasoning_loop(request, context)
+            
+            # Extract results from reasoning state
+            response = reasoning_state.final_conclusion.get("content", "Reasoning completed successfully")
+            confidence = reasoning_state.confidence
+            reasoning_steps = reasoning_state.step_history
+            
+            capabilities_used.append("super_reasoning_engine")
+            capabilities_used.extend(reasoning_state.tools_used)
+            
+            return {
+                "response": response,
+                "confidence": confidence,
+                "reasoning": reasoning_steps,
+                "capabilities_used": capabilities_used,
+                "reasoning_state": {
+                    "observations": len(reasoning_state.observations),
+                    "hypotheses": len(reasoning_state.hypotheses),
+                    "challenges": len(reasoning_state.challenges),
+                    "comparisons": len(reasoning_state.comparisons),
+                    "compressed_insights": len(reasoning_state.compressed_insights),
+                    "reformulations": len(reasoning_state.reformulations),
+                    "processing_time": sum(reasoning_state.processing_times)
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"Super reasoning pipeline failed: {str(e)}")
+            # Fallback to standard pipeline
+            return await self._standard_pipeline(request, context)
 
     # Implementation of core methods would continue here...
     # Due to length constraints, I'm showing the structure and key methods

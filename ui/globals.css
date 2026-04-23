@@ -1,0 +1,107 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  :root {
+    --synova-primary: 59 130 246;
+    --synova-primary-foreground: 248 250 252;
+    --synova-secondary: 107 114 128;
+    --synova-secondary-foreground: 224 242 248;
+    --synova-accent: 99 102 241;
+    --synova-accent-foreground: 248 250 252;
+    --synova-muted: 156 163 175;
+    --synova-muted-foreground: 214 222 235;
+    --synova-border: 229 231 235;
+    --synova-input: 255 255 255;
+    --synova-ring: 99 102 241;
+    --synova-radius: 0.5rem;
+    --synova-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@layer components {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  .synova-card {
+    @apply bg-card text-card-foreground rounded-lg border border-border shadow-lg;
+  }
+  
+  .synova-button {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .synova-button-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+    @apply focus-visible:ring-ring;
+  }
+  
+  .synova-button-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+  
+  .synova-input {
+    @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm;
+    @apply ring-offset-background file:border-0 file:bg-background;
+    @apply placeholder:text-muted-foreground;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  .synova-avatar {
+    @apply relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full;
+  }
+  
+  .synova-sidebar {
+    @apply flex h-full w-64 flex-col border-r border-border bg-background;
+  }
+  
+  .synova-header {
+    @apply flex h-16 items-center border-b border-border bg-background px-4;
+  }
+  
+  .synova-message {
+    @apply max-w-[800px] rounded-lg border border-border bg-background p-4;
+  }
+  
+  .synova-message-user {
+    @apply bg-primary text-primary-foreground ml-auto;
+  }
+  
+  .synova-message-assistant {
+    @apply bg-muted text-muted-foreground;
+  }
+  
+  .synova-typing-indicator {
+    @apply flex items-center gap-2 px-3 py-2 text-muted-foreground;
+  }
+  
+  .synova-code-block {
+    @apply relative rounded-md bg-muted p-4 font-mono text-sm overflow-x-auto;
+  }
+  
+  .synova-loading-dots {
+    @apply flex gap-1;
+  }
+  
+  .synova-loading-dot {
+    @apply h-2 w-2 rounded-full bg-muted-foreground animate-pulse;
+  }
+  
+  .synova-loading-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .synova-loading-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+}
