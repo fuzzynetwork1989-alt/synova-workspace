@@ -7,6 +7,8 @@ import os
 from typing import Dict, Any, Optional
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from jose import jwt, JWTError
+from datetime import datetime, timedelta
 import structlog
 
 log = structlog.get_logger()
@@ -20,27 +22,38 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     Returns user context with user_id, tenant_id, and permissions
     """
     token = credentials.credentials
-    
-    # In production, would verify JWT token
-    # try:
-    #     from jose import jwt
-    #     payload = jwt.decode(token, os.getenv("JWT_SECRET"), algorithms=["HS256"])
-    #     return {
-    #         "id": payload.get("user_id"),
-    #         "tenant_id": payload.get("tenant_id"),
-    #         "email": payload.get("email"),
-    #         "role": payload.get("role", "user")
-    #     }
-    # except Exception as e:
-    #     raise HTTPException(status_code=401, detail="Invalid token")
-    
-    # Placeholder for development
-    return {
-        "id": "dev_user",
-        "tenant_id": "default",
-        "email": "dev@example.com",
-        "role": "admin"
-    }
+
+    try:
+        payload = jwt.decode(
+            token,
+            os.getenv("JWT_SECRET", "dev-secret"),
+            algorithms=[os.getenv("JWT_ALGORITHM", "HS256")]
+        )
+
+        user_id = payload.get("user_id")
+        tenant_id = payload.get("tenant_id")
+        email = payload.get("email")
+        role = payload.get("role", "user")
+
+        if user_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token: missing user_id"
+            )
+
+        return {
+            "id": user_id,
+            "tenant_id": tenant_id or "default",
+            "email": email,
+            "role": role
+        }
+
+    except JWTError as e:
+        log.error("jwt_decode_error", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )
 
 
 async def get_current_tenant(user: Dict[str, Any] = Depends(get_current_user)) -> str:

@@ -1,5 +1,13 @@
 {
     "markdown.validate.enabled": true,
     "python.languageServer": "None",
-    "python.terminal.useEnvFile": true
+    "python.terminal.useEnvFile": true,
+    "application.experimental.rendererProfiling": true,
+    "cSpell.suggestionMenuType": "quickFix",
+    "eslint.format.enable": true,
+    "eslint.lintTask.enable": true,
+    "git.branchProtectionPrompt": "alwaysCommit",
+    "git.enableSmartCommit": true,
+    "git.fetchOnPull": true,
+    "github-actions.workflows.pinned.refresh.enabled": false
 }

@@ -31,8 +31,13 @@ log = structlog.get_logger()
 # Import routers
 import sys
 import os
-# Add the src directory to path for imports
+
+# Add src to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Add workspace root to path for packages imports
+workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+sys.path.insert(0, workspace_root)
 
 from routers.chat import router as chat_router
 from routers.rag import router as rag_router
@@ -42,7 +47,8 @@ from routers.memory import router as memory_router
 from routers.usage import router as usage_router
 from routers.vision import router as vision_router
 from routers.voice import router as voice_router
-from endpoints.brain_endpoints import router as brain_router
+# brain_router temporarily disabled - complex cross-package dependencies require refactoring
+# from endpoints.brain_endpoints import router as brain_router
 
 # Import middleware
 from middleware.auth import get_current_user
@@ -90,7 +96,8 @@ app.include_router(memory_router, prefix="/api")
 app.include_router(usage_router, prefix="/api")
 app.include_router(vision_router, prefix="/api")
 app.include_router(voice_router, prefix="/api")
-app.include_router(brain_router, prefix="/api")
+# brain_router temporarily disabled - complex cross-package dependencies require refactoring
+# app.include_router(brain_router, prefix="/api")
 
 # Root endpoint
 @app.get("/")
@@ -172,14 +179,15 @@ async def shutdown_event():
 if __name__ == "__main__":
     import uvicorn
 
-    host = os.getenv("APP_HOST", "0.0.0.0")
+    host = os.getenv("APP_HOST", "127.0.0.1")
     port = int(os.getenv("APP_PORT", "8000"))
     debug = os.getenv("DEBUG", "true").lower() == "true"
 
+    print(f"Starting server on {host}:{port}")
     uvicorn.run(
         "main:app",
         host=host,
         port=port,
-        reload=debug,
+        reload=False,  # Disable reload to avoid potential issues
         log_level="info"
     )

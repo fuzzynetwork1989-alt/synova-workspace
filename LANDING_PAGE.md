@@ -1,4 +1,5 @@
 # Synova AI Platform
+
 The Frontier-Class AI Platform with Deep Resonance Thinking and Multi-Agent Orchestration
 
 ---
@@ -19,31 +20,37 @@ Synova AI is a comprehensive AI platform featuring two distinct but complementar
 A proprietary cognitive architecture that processes information through 6 specialized layers:
 
 **Layer 1: Meta-Cognitive Awareness**
+
 - Self-awareness and confidence calibration
 - Bias detection and logical fallacy checking
 - Constraint validation
 
 **Layer 2: Multi-Perspective Synthesis**
+
 - Expert, Critic, User, System viewpoints
 - Dialectical reasoning (thesis → antithesis → synthesis)
 - Contradiction identification and resolution
 
 **Layer 3: Temporal Depth Reasoning**
+
 - Causal chain mapping
 - Counterfactual scenario simulation
 - Multi-timeframe analysis (short, medium, long-term)
 
 **Layer 4: Conceptual Lattice Navigation**
+
 - Cross-domain analogies
 - Concept blending from multiple domains
 - Abstract-to-concrete solution bridging
 
 **Layer 5: Emergent Property Detection**
+
 - System-level pattern recognition
 - Dynamics modeling
 - Holistic understanding synthesis
 
 **Layer 6: Recursive Self-Improvement**
+
 - Strategy optimization based on success rates
 - Meta-strategy updates
 - Knowledge consolidation
@@ -51,28 +58,33 @@ A proprietary cognitive architecture that processes information through 6 specia
 ### Synova Nexus Architecture
 
 **Backend Stack**
+
 - FastAPI + async + SSE streaming
 - Pydantic v2 for validation
 - Celery/Redis for job queues
 
 **Orchestration Layer**
+
 - LangGraph v0.3 "Supanova Brain"
 - Planner → Executor → Verifier → Critic nodes
 - MoE (Mixture of Experts) agent routing
 - Agent types: Code, Logic, Research, QA, Creative
 
 **LLM Layer**
+
 - Provider-agnostic service
 - Hot-swappable per request
 - Supported providers: Ollama, OpenAI, Anthropic, Gemini, Grok, HuggingFace
 - Models: Llama 3.1, Gemma 4, GPT-4o, Claude Opus, Gemini 2.5, Grok 3
 
 **Memory & RAG**
+
 - Supabase pgvector for long-term storage
 - Redis for short-term memory
 - PDF/doc upload, chunking, embedding, retrieval
 
 **Frontend Stack**
+
 - Next.js 15 + React 19
 - Tailwind CSS + shadcn/ui
 - Streaming chat with markdown
@@ -81,11 +93,13 @@ A proprietary cognitive architecture that processes information through 6 specia
 - Autopilot console
 
 **Auth & Billing**
+
 - Supabase Auth for multi-tenant authentication
 - Stripe integration for billing
 - Tiers: $9 (Starter), $29 (Pro), $99 (Enterprise)
 
 **Deployment**
+
 - Railway for backend + workers
 - Vercel for frontend
 - Docker Compose for local development
@@ -98,6 +112,7 @@ A proprietary cognitive architecture that processes information through 6 specia
 ### Core AI Capabilities
 
 **Streaming Chat**
+
 - Real-time response generation
 - Markdown rendering
 - Code block syntax highlighting
@@ -105,59 +120,69 @@ A proprietary cognitive architecture that processes information through 6 specia
 - Citations from RAG sources
 
 **Supanova Multi-Agent Mode**
+
 - Live agent trace visualization
 - Planner → Executor → Verifier → Critic workflow
 - MoE routing to specialized agents
 - Perplexity-style execution transparency
 
 **Deep Research Mode**
+
 - Web search integration (Serper, Tavily)
 - Multi-source synthesis
 - Citation generation
 - Perplexity/GPT Deep Research style
 
 **RAG (Retrieval Augmented Generation)**
+
 - PDF/doc upload support
 - Intelligent chunking
 - Embedding with pgvector
 - Context-aware retrieval
 
 **Autopilot Mode v4.1**
+
 - "Build [idea]" → full-stack scaffolding
 - Scaffold, MVP, or Production depth levels
 - Stack hints for technology selection
 - Complete project generation
 
 **Tool Use / Function Calling**
+
 - Web search integration
 - Code execution hooks
 - Image generation hooks
 - Custom tool registration
 
 **Vision / Multimodal**
+
 - Image upload support
 - GPT-4o, Claude, Gemini vision APIs
 - Scene understanding
 - OCR text extraction
 
 **Voice I/O**
+
 - Whisper for transcription (stubbed)
 - TTS for synthesis (stubbed)
 - Ready for future implementation
 
 **Memory Layer**
+
 - Per-user long-term memory
 - Editable memory items
 - Automatic extraction
 - Category organization
 
 **Cost & Usage Dashboard**
+
 - Per-tenant token tracking
 - Cost calculation ($)
 - Quota monitoring
 - Usage analytics
 
 **Safety Guardrails**
+
 - Input filtering
 - Output moderation
 - Red-team protection
@@ -315,6 +340,7 @@ synova-nexus/
 ### ✅ Fully Implemented
 
 **Deep Resonance Thinking Architecture**
+
 - 6-layer cognitive architecture design
 - Modelfile with DRT system prompt
 - SynovaModel integration with Peak Brain
@@ -322,12 +348,14 @@ synova-nexus/
 - Response synthesis
 
 **ML/Training Pipeline**
+
 - QLoRA fine-tuning pipeline
 - Synthetic data generator
 - Self-learning agent for cost-free improvement
 - Model configuration
 
 **API System**
+
 - FastAPI backend structure
 - Provider service for LLM abstraction
 - RAG service
@@ -341,6 +369,7 @@ synova-nexus/
 - Observability system
 
 **Brain Orchestration**
+
 - Peak Brain unified orchestration
 - Multi-agent runtime
 - Supanova Brain
@@ -348,6 +377,7 @@ synova-nexus/
 - Governance approvals
 
 **Documentation**
+
 - Architecture documentation
 - Implementation guide
 - API system guide
@@ -357,12 +387,14 @@ synova-nexus/
 ### 🚧 Partially Implemented
 
 **Frontend**
+
 - API-first architecture ready for frontend
 - Page templates exist
 - Styles directory exists
 - Next.js 15 frontend (Nexus spec) - NOT YET IMPLEMENTED
 
 **Deployment**
+
 - Docker configurations exist
 - Infrastructure directory exists
 - Railway/Vercel configs (Nexus spec) - NOT YET IMPLEMENTED
@@ -370,12 +402,14 @@ synova-nexus/
 ### ❌ Not Yet Implemented (Nexus Specification)
 
 **Supabase Integration**
+
 - Supabase migrations
 - pgvector schema
 - Auth integration
 - Multi-tenant database structure
 
 **Next.js 15 Frontend**
+
 - Complete React 19 frontend
 - shadcn/ui components
 - Agent trace visualizer
@@ -386,20 +420,24 @@ synova-nexus/
 - XR scene components
 
 **LangGraph v0.3 Supanova**
+
 - Planner → Executor → Verifier → Critic nodes
 - MoE agent routing
 - Agent type specialization
 
 **Celery/Redis Workers**
+
 - Background job processing
 - Task queues
 
 **Stripe Billing**
+
 - Subscription tiers ($9/$29/$99)
 - Webhook handling
 - Customer management
 
 **Deployment Configs**
+
 - Railway deployment
 - Vercel deployment
 - CI/CD workflows
@@ -419,12 +457,14 @@ synova-nexus/
 ### Quick Start
 
 **1. Clone the repository**
+
 ```bash
 git clone https://github.com/your-org/synova-workspace.git
 cd synova-workspace
 ```
 
 **2. Set up environment variables**
+
 ```bash
 cp .env.example .env
 # Edit .env with your API keys
@@ -433,20 +473,23 @@ cp .env.example .env
 **3. Install dependencies**
 
 Backend:
+
 ```bash
 cd apps/api
 pip install -r requirements.txt
 ```
 
 **4. Start the API server**
+
 ```bash
 cd apps/api/src
 python main.py
 ```
 
 **5. Access the API**
-- API docs: http://localhost:8000/docs
-- Health check: http://localhost:8000/health
+
+- API docs: <http://localhost:8000/docs>
+- Health check: <http://localhost:8000/health>
 
 ### Ollama Setup (for local LLM)
 
@@ -470,12 +513,14 @@ ollama run synova-drt
 ## API Documentation
 
 ### Base URL
+
 - Development: `http://localhost:8000`
 - Production: `https://api.synova.ai`
 
 ### Authentication
 
 Generate a free token for development:
+
 ```python
 import jwt
 from datetime import datetime, timedelta
@@ -492,31 +537,39 @@ token = jwt.encode(payload, "dev-secret", algorithm="HS256")
 ### Key Endpoints
 
 **Chat & Reasoning**
+
 - `POST /brain/chat` - Deep Resonance Thinking chat
 - `POST /api/chat/stream` - Streaming responses
 
 **Multi-Agent**
+
 - `POST /api/agents/supanova/run` - Run Supanova multi-agent
 
 **RAG**
+
 - `POST /api/rag/upload` - Upload documents
 - `POST /api/rag/query` - Query documents
 
 **Autopilot**
+
 - `POST /api/autopilot/build` - Generate applications
 
 **Memory**
+
 - `GET /api/memory/` - List memories
 - `POST /api/memory/` - Create memory
 
 **Vision**
+
 - `POST /api/vision/analyze` - Analyze images
 
 **Voice**
+
 - `POST /api/voice/transcribe` - Transcribe audio
 - `POST /api/voice/synthesize` - Synthesize speech
 
 **Usage**
+
 - `GET /api/usage/` - Get usage statistics
 
 See `docs/api/synova-api-system-guide.md` for complete API documentation.
@@ -526,12 +579,14 @@ See `docs/api/synova-api-system-guide.md` for complete API documentation.
 ## Pricing & Tiers
 
 ### Starter - $9/month
+
 - 100K tokens/month
 - Basic DRT features
 - RAG with 100 documents
 - Community support
 
 ### Pro - $49/month
+
 - 1M tokens/month
 - Full DRT features
 - RAG with 1,000 documents
@@ -539,6 +594,7 @@ See `docs/api/synova-api-system-guide.md` for complete API documentation.
 - API access
 
 ### Enterprise - Custom
+
 - Unlimited tokens
 - Custom model fine-tuning
 - Unlimited RAG documents
@@ -551,6 +607,7 @@ See `docs/api/synova-api-system-guide.md` for complete API documentation.
 ## Roadmap
 
 ### Q2 2026
+
 - ✅ Deep Resonance Thinking architecture
 - ✅ Self-learning agent
 - ✅ API system
@@ -559,6 +616,7 @@ See `docs/api/synova-api-system-guide.md` for complete API documentation.
 - 🚧 LangGraph v0.3 Supanova
 
 ### Q3 2026
+
 - Complete Nexus specification implementation
 - Stripe billing integration
 - Railway/Vercel deployment
@@ -566,12 +624,14 @@ See `docs/api/synova-api-system-guide.md` for complete API documentation.
 - Enhanced XR features
 
 ### Q4 2026
+
 - Custom model fine-tuning service
 - Enterprise features
 - Advanced safety guardrails
 - Performance optimizations
 
 ### 2027
+
 - Proprietary frontier model training
 - Global deployment regions
 - Advanced multi-modal capabilities
@@ -591,7 +651,7 @@ See `docs/api/synova-api-system-guide.md` for complete API documentation.
 
 ## Support
 
-- **Email**: support@synova.ai
+- **Email**: <support@synova.ai>
 - **Documentation**: docs.synova.ai
 - **API Reference**: api.synova.ai/docs
 - **Status**: status.synova.ai
@@ -610,6 +670,7 @@ Deep Resonance Thinking architecture is proprietary to Synova AI and may not be 
 ## Acknowledgments
 
 Built with:
+
 - FastAPI, LangChain, LangGraph
 - Supabase, Redis, PostgreSQL
 - Ollama, OpenAI, Anthropic, Gemini
