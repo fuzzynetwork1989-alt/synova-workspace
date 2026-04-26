@@ -23,7 +23,7 @@ set_secret() {
     local repo=$1
     local secret_name=$2
     local secret_value=$3
-    
+
     echo "🔑 Setting $secret_name in $repo..."
     if echo "$secret_value" | gh secret set "$secret_name" --repo "$repo"; then
         echo "✅ $secret_name set successfully"
@@ -41,7 +41,7 @@ echo ""
 set_secret "$MAIN_REPO" "RAILWAY_TOKEN" "your_railway_token_here"
 set_secret "$MAIN_REPO" "RAILWAY_PROJECT_ID" "your_railway_project_id"
 
-# Vercel Configuration  
+# Vercel Configuration
 set_secret "$MAIN_REPO" "VERCEL_TOKEN" "your_vercel_token_here"
 set_secret "$MAIN_REPO" "VERCEL_ORG_ID" "your_vercel_org_id_here"
 set_secret "$MAIN_REPO" "VERCEL_PROJECT_ID" "your_vercel_project_id_here"
