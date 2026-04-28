@@ -11,8 +11,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY main.py .
-COPY enhanced_brain.py .
+COPY . .
 
 # Expose port
 EXPOSE 8001
