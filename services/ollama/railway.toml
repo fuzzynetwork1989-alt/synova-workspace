@@ -6,3 +6,7 @@ healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
+<<<<<<< HEAD
+=======
+
+>>>>>>> f4c9d85c9149d8f54befb35166272df3c90a429a
