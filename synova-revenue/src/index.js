@@ -616,12 +616,19 @@ class SynovaRevenue {
   }
 
   // Start server
-  start(port = 3000) {
-    this.app.listen(port, () => {
-      console.log(`💰 Synova Revenue API running on port ${port}`);
-      console.log(`📊 Dashboard: http://localhost:${port}/api/revenue/dashboard`);
+  start(port = null) {
+    const serverPort = port || process.env.PORT || 3003;
+    this.app.listen(serverPort, () => {
+      console.log(`💰 Synova Revenue API running on port ${serverPort}`);
+      console.log(`📊 Dashboard: http://localhost:${serverPort}/api/revenue/dashboard`);
     });
   }
+}
+
+// Auto-start if run directly
+if (require.main === module) {
+  const revenue = new SynovaRevenue();
+  revenue.start();
 }
 
 export default SynovaRevenue;

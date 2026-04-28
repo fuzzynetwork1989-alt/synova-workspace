@@ -1,7 +1,7 @@
 {
-  "name": "@synova/holo-renderer",
+  "name": "@synova/holo-renderer-nodejs",
   "version": "4.1.0",
-  "description": "Synova AI Holo-Architecture Renderer - Babylon.js 3D blueprint generator",
+  "description": "NODEJS LIBRARY - NOT FOR PYTHON API - Synova AI Holo-Architecture Renderer - Babylon.js 3D blueprint generator",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
@@ -9,7 +9,7 @@
     "build": "babel src -d dist",
     "test": "jest",
     "render:warehouse": "node src/index.js --blueprint warehouse",
-    "render:lofts": "node src/index.js --blueprint lofts", 
+    "render:lofts": "node src/index.js --blueprint lofts",
     "render:luxury": "node src/index.js --blueprint luxury"
   },
   "keywords": ["synova", "holo-renderer", "babylonjs", "3d", "gltf", "xr", "architecture"],
