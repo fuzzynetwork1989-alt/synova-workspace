@@ -8,5 +8,5 @@ restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
 [env]
-OLLAMA_HOST = "0.0.0.0"
-OLLAMA_PORT = "11434"
+# Configure Ollama to listen on Railway's injected PORT
+OLLAMA_HOST = "0.0.0.0:$PORT"
