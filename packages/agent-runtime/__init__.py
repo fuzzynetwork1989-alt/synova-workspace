@@ -1,1 +1,0 @@
-# Synova Agent Runtime Package

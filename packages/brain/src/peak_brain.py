@@ -14,12 +14,20 @@ import json
 # Import Brain components
 from packages.ai.src.model_router import AdvancedModelRouter, RoutingRequest, ModelRoute
 from packages.memory.src.hierarchical_memory import HierarchicalMemorySystem, MemoryType, MemoryLayer
-from packages.agent_runtime.src.multi_agent_runtime import MultiAgentRuntime, ComplexTask, TaskResult, ToolRegistry
+try:
+    from packages.agent_runtime.src.multi_agent_runtime import MultiAgentRuntime, ComplexTask, TaskResult, ToolRegistry
+    from packages.agent_runtime.src.supanova_brain import SupanovaBrain
+    AGENT_RUNTIME_AVAILABLE = True
+except ImportError:
+    AGENT_RUNTIME_AVAILABLE = False
+    MultiAgentRuntime = None
+    ComplexTask = None
+    TaskResult = None
+    ToolRegistry = None
+    SupanovaBrain = None
+
 from packages.observability.src.brain_observability import BrainObservability, SystemComponent
 from packages.governance.src.brain_governance import BrainGovernance, ActionType
-
-# Import Nexus components
-from packages.agent_runtime.src.supanova_brain import SupanovaBrain
 from packages.ai.src.provider_service import ProviderService, LLMProvider
 from packages.retrieval.src.rag_service import RAGService
 from packages.brain.src.autopilot_mode import AutopilotMode, AutopilotDepth
@@ -87,13 +95,20 @@ class PeakBrain:
         # Initialize Brain components
         self.model_router = AdvancedModelRouter()
         self.memory_system = HierarchicalMemorySystem()
-        self.tool_registry = ToolRegistry()
-        self.agent_runtime = MultiAgentRuntime(self.tool_registry)
+        if AGENT_RUNTIME_AVAILABLE:
+            self.tool_registry = ToolRegistry()
+            self.agent_runtime = MultiAgentRuntime(self.tool_registry)
+        else:
+            self.tool_registry = None
+            self.agent_runtime = None
         self.observability = BrainObservability()
         self.governance = BrainGovernance()
 
         # Initialize Nexus components
-        self.supanova_brain = SupanovaBrain(self.model_router, self.memory_system)
+        if AGENT_RUNTIME_AVAILABLE:
+            self.supanova_brain = SupanovaBrain(self.model_router, self.memory_system)
+        else:
+            self.supanova_brain = None
         self.provider_service = ProviderService(default_provider=LLMProvider.openai)
         self.rag_service = RAGService()
         self.autopilot_mode = AutopilotMode()
@@ -109,12 +124,12 @@ class PeakBrain:
         self.component_status = {
             'model_router': True,
             'memory_system': True,
-            'agent_runtime': True,
-            'tool_registry': True,
+            'agent_runtime': AGENT_RUNTIME_AVAILABLE,
+            'tool_registry': AGENT_RUNTIME_AVAILABLE,
             'observability': True,
             'governance': True,
             # Nexus components
-            'supanova_brain': True,
+            'supanova_brain': AGENT_RUNTIME_AVAILABLE,
             'provider_service': True,
             'rag_service': True,
             'autopilot_mode': True,
@@ -150,6 +165,9 @@ class PeakBrain:
 
     def _register_basic_tools(self):
         """Register basic tools for the tool registry"""
+        if not AGENT_RUNTIME_AVAILABLE:
+            return
+
         # Example tool implementations
         async def search_tool(query: str) -> Dict[str, Any]:
             return {"results": f"Search results for: {query}", "count": 5}

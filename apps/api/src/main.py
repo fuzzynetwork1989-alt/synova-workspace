@@ -47,8 +47,15 @@ from routers.memory import router as memory_router
 from routers.usage import router as usage_router
 from routers.vision import router as vision_router
 from routers.voice import router as voice_router
-# brain_router temporarily disabled - complex cross-package dependencies require refactoring
-# from endpoints.brain_endpoints import router as brain_router
+# Brain router integration
+try:
+    from packages.brain.src.peak_brain import PeakBrain, BrainMode
+    from endpoints.brain_endpoints import router as brain_router
+    brain_integration_enabled = True
+    log.info("brain_integration_enabled")
+except ImportError as e:
+    log.warning("brain_import_failed", error=str(e))
+    brain_integration_enabled = False
 
 # Import middleware
 from middleware.auth import get_current_user
@@ -58,9 +65,16 @@ async def lifespan(app: FastAPI):
     """Application lifespan manager"""
     log.info("application_startup", message="Starting Synova AI API")
 
-    # Initialize services (would be done here in production)
-    # from packages.brain.src.peak_brain import PeakBrain, BrainMode
-    # app.state.brain = PeakBrain(mode=BrainMode.BOOTSTRAP)
+    # Initialize Brain if integration is enabled
+    if brain_integration_enabled:
+        try:
+            app.state.brain = PeakBrain(mode=BrainMode.BOOTSTRAP)
+            log.info("brain_initialized", mode="BOOTSTRAP")
+        except Exception as e:
+            log.error("brain_init_failed", error=str(e))
+            app.state.brain = None
+    else:
+        app.state.brain = None
 
     yield
 
@@ -96,8 +110,13 @@ app.include_router(memory_router, prefix="/api")
 app.include_router(usage_router, prefix="/api")
 app.include_router(vision_router, prefix="/api")
 app.include_router(voice_router, prefix="/api")
-# brain_router temporarily disabled - complex cross-package dependencies require refactoring
-# app.include_router(brain_router, prefix="/api")
+
+# Register brain router if integration is enabled
+if brain_integration_enabled:
+    app.include_router(brain_router, prefix="/brain")
+    log.info("brain_router_registered")
+else:
+    log.warning("brain_router_skipped", reason="integration_disabled")
 
 # Root endpoint
 @app.get("/")

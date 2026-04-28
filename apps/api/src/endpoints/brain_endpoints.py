@@ -64,8 +64,8 @@ class ApprovalRequest(BaseModel):
     approver: str
     reason: str = ""
 
-# Initialize router
-router = APIRouter(prefix="/brain", tags=["brain"])
+# Initialize router (prefix added in main.py)
+router = APIRouter(tags=["brain"])
 
 # Global Brain instance (in production, this would be properly managed)
 brain_instance: Optional[PeakBrain] = None
@@ -497,27 +497,22 @@ async def maintenance_cleanup_endpoint(background_tasks: BackgroundTasks, brain:
         "timestamp": datetime.now().isoformat()
     }
 
-# Error handlers
-@router.exception_handler(Exception)
-async def global_exception_handler(request, exc):
-    """Global exception handler"""
-    return {
-        "error": "Internal server error",
-        "detail": str(exc),
-        "timestamp": datetime.now().isoformat()
-    }
+# Note: Exception handlers and middleware should be defined on the FastAPI app, not on routers
+# These are commented out to prevent AttributeError
+# @router.exception_handler(Exception)
+# async def global_exception_handler(request, exc):
+#     """Global exception handler"""
+#     return {
+#         "error": "Internal server error",
+#         "detail": str(exc),
+#         "timestamp": datetime.now().isoformat()
+#     }
 
-# Middleware for request logging
-@router.middleware("http")
-async def log_requests(request, call_next):
-    """Log all requests"""
-    start_time = datetime.now()
-
-    response = await call_next(request)
-
-    process_time = (datetime.now() - start_time).total_seconds()
-
-    # Log request (in production, would use proper logging)
-    print(f"{request.method} {request.url.path} - {response.status_code} - {process_time:.3f}s")
-
-    return response
+# @router.middleware("http")
+# async def log_requests(request, call_next):
+#     """Log all requests"""
+#     start_time = datetime.now()
+#     response = await call_next(request)
+#     process_time = (datetime.now() - start_time).total_seconds()
+#     print(f"{request.method} {request.url.path} - {response.status_code} - {process_time:.3f}s")
+#     return response
