@@ -135,7 +135,10 @@ async def ai_generate(request: dict):
                 user_id="api_user",
                 request_type=RequestType.CHAT,
                 prompt=prompt,
-                session_id=session_id
+                session_id=session_id,
+                urgency=0.5,
+                complexity=0.5,
+                max_cost=1.0
             )
             response = await app.state.brain.process_request(brain_request)
             return {"response": response.content, "session_id": session_id}
@@ -162,7 +165,10 @@ async def ai_generate_stream(request: dict):
                     request_type=RequestType.CHAT,
                     prompt=prompt,
                     session_id=session_id,
-                    requires_streaming=True
+                    requires_streaming=True,
+                    urgency=0.5,
+                    complexity=0.5,
+                    max_cost=1.0
                 )
                 async for chunk in app.state.brain.process_streaming_request(brain_request):
                     yield f"data: {chunk}\n\n"
@@ -226,7 +232,10 @@ async def ai_code(request: dict):
                 user_id="api_user",
                 request_type=RequestType.CODING,
                 prompt=f"Generate {language} code: {prompt}",
-                context={"language": language}
+                context={"language": language},
+                urgency=0.5,
+                complexity=0.5,
+                max_cost=1.0
             )
             response = await app.state.brain.process_request(brain_request)
             return {
@@ -254,7 +263,10 @@ async def ai_reasoning(request: dict):
                 user_id="api_user",
                 request_type=RequestType.REASONING,
                 prompt=prompt,
-                context=context
+                context=context,
+                urgency=0.5,
+                complexity=0.5,
+                max_cost=1.0
             )
             response = await app.state.brain.process_request(brain_request)
             return {
@@ -285,7 +297,10 @@ async def ai_memory(request: dict):
                 user_id="api_user",
                 request_type=RequestType.CHAT,
                 prompt=combined_prompt,
-                session_id=session_id
+                session_id=session_id,
+                urgency=0.5,
+                complexity=0.5,
+                max_cost=1.0
             )
             response = await app.state.brain.process_request(brain_request)
             return {
