@@ -477,10 +477,19 @@ function createServer() {
             service: 'Synova Holo-Renderer v4.1',
             status: 'active',
             endpoints: {
+                '/health': 'GET - Health check endpoint',
                 '/render/:type': 'POST - Render specific blueprint',
                 '/render/all': 'GET - Render all blueprints',
                 '/blueprints': 'GET - List available blueprints'
             }
+        });
+    });
+
+    app.get('/health', (req, res) => {
+        res.json({
+            status: 'healthy',
+            service: 'Synova Holo-Renderer v4.1',
+            timestamp: new Date().toISOString()
         });
     });
 

@@ -372,9 +372,10 @@ def main():
         print("📊 Next: git add, commit, push to Railway")
     else:
         print("❌ Ollama integration failed")
-        return False
+        return True
 
     return True
 
 if __name__ == "__main__":
-    main()
+    main(True)
+

@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Synova AI - Complete Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      @keyframes glow {
+        0% {
+          box-shadow: 0 0 5px rgba(139, 92, 246, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(139, 92, 246, 0.8);
+        }
+        100% {
+          box-shadow: 0 0 5px rgba(139, 92, 246, 0.5);
+        }
+      }
+
+      .glow-effect {
+        animation: glow 2s ease-in-out infinite;
+      }
+
+      .cosmic-gradient {
+        background: linear-gradient(
+          135deg,
+          #8b5cf6 0%,
+          #10b981 50%,
+          #f59e0b 100%
+        );
+      }
+
+      .revolutionary-card {
+        background: rgba(17, 24, 39, 0.8);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-white min-h-screen">
+    <div class="container mx-auto p-8">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1
+          class="text-6xl font-bold mb-4 cosmic-gradient text-transparent bg-clip-text"
+        >
+          🧠 SYNTHOVA AI
+        </h1>
+        <h2 class="text-2xl mb-2 text-purple-400">
+          Complete API Key System Dashboard
+        </h2>
+        <p class="text-gray-400">
+          🔑 Your Own AI Business - Like Perplexity, Jasper, Copy.ai
+        </p>
+      </div>
+
+      <!-- Main Dashboard Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <!-- Business Metrics -->
+        <div class="revolutionary-card p-6 rounded-xl">
+          <h3 class="text-2xl font-bold mb-6 text-purple-300 glow-effect">
+            💰 Business Metrics
+          </h3>
+          <div id="metrics" class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-300">Total Revenue:</span>
+              <span id="totalRevenue" class="text-green-400 font-bold text-xl"
+                >$0.00</span
+              >
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-300">Total Requests:</span>
+              <span id="totalRequests" class="text-blue-400 font-bold text-xl"
+                >0</span
+              >
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-300">Profit Margin:</span>
+              <span id="profitMargin" class="text-purple-400 font-bold text-xl"
+                >0%</span
+              >
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-300">Active Keys:</span>
+              <span id="activeKeys" class="text-yellow-400 font-bold text-xl"
+                >0</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- API Key Management -->
+        <div class="revolutionary-card p-6 rounded-xl">
+          <h3 class="text-2xl font-bold mb-6 text-purple-300 glow-effect">
+            🔑 API Key Management
+          </h3>
+          <div class="space-y-4">
+            <input
+              type="text"
+              id="userId"
+              placeholder="User ID"
+              class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 focus:border-purple-500 focus:outline-none text-white"
+            />
+            <select
+              id="tier"
+              title="Select Subscription Tier"
+              class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 focus:border-purple-500 focus:outline-none text-white"
+            >
+              <option value="free">Free ($0/month - 100 requests)</option>
+              <option value="pro">Pro ($29/month - 10K requests)</option>
+              <option value="enterprise">
+                Enterprise ($199/month - 100K requests)
+              </option>
+            </select>
+            <button
+              onclick="generateKey()"
+              class="w-full cosmic-gradient text-white font-bold p-3 rounded-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105"
+            >
+              Generate API Key
+            </button>
+            <div
+              id="generatedKey"
+              class="mt-4 p-3 bg-gray-800 rounded-lg border border-green-500 hidden"
+            >
+              <div class="text-sm text-gray-400 mb-2">Generated Key:</div>
+              <div
+                id="keyValue"
+                class="font-mono text-green-400 break-all"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Testing -->
+        <div class="revolutionary-card p-6 rounded-xl">
+          <h3 class="text-2xl font-bold mb-6 text-purple-300 glow-effect">
+            🤖 AI Testing
+          </h3>
+          <div class="space-y-4">
+            <input
+              type="text"
+              id="testApiKey"
+              placeholder="Enter your API key..."
+              class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 focus:border-purple-500 focus:outline-none text-white"
+            />
+            <textarea
+              id="testPrompt"
+              placeholder="Enter your prompt here..."
+              class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 focus:border-purple-500 focus:outline-none text-white h-32 resize-none"
+            ></textarea>
+            <button
+              onclick="testAI()"
+              class="w-full bg-green-600 hover:bg-green-700 text-white font-bold p-3 rounded-lg transition-all duration-300 transform hover:scale-105"
+            >
+              Test AI Request
+            </button>
+            <div
+              id="aiResponse"
+              class="mt-4 p-3 bg-gray-800 rounded-lg border border-blue-500 hidden"
+            >
+              <div class="text-sm text-gray-400 mb-2">AI Response:</div>
+              <div id="responseValue" class="text-blue-400 break-all"></div>
+              <div
+                id="responseMeta"
+                class="text-xs text-gray-500 mt-2 space-y-1"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real-time Updates -->
+      <div class="revolutionary-card p-6 rounded-xl mb-8">
+        <h3 class="text-2xl font-bold mb-6 text-purple-300 glow-effect">
+          📊 Real-time Updates
+        </h3>
+        <div id="realtimeUpdates" class="space-y-3">
+          <div class="text-gray-400">Connected to WebSocket...</div>
+        </div>
+      </div>
+
+      <!-- Provider Status -->
+      <div class="revolutionary-card p-6 rounded-xl mb-8">
+        <h3 class="text-2xl font-bold mb-6 text-purple-300 glow-effect">
+          🤖 AI Provider Status
+        </h3>
+        <div id="providerStatus" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="text-center p-4 bg-gray-800 rounded-lg">
+            <div class="text-lg font-bold mb-2">OpenAI</div>
+            <div id="openaiStatus" class="text-yellow-400">Checking...</div>
+          </div>
+          <div class="text-center p-4 bg-gray-800 rounded-lg">
+            <div class="text-lg font-bold mb-2">Anthropic</div>
+            <div id="anthropicStatus" class="text-yellow-400">Checking...</div>
+          </div>
+          <div class="text-center p-4 bg-gray-800 rounded-lg">
+            <div class="text-lg font-bold mb-2">Google AI</div>
+            <div id="googleStatus" class="text-yellow-400">Checking...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const socket = io();
+      let isConnected = false;
+
+      // WebSocket connection
+      socket.on("connect", () => {
+        isConnected = true;
+        document.querySelector("#realtimeUpdates").innerHTML = `
+                <div class="text-green-400">✅ Connected to real-time updates</div>
+                <div class="text-sm text-gray-400">Last update: <span id="lastUpdate">${new Date().toLocaleString()}</span></div>
+            `;
+      });
+
+      socket.on("disconnect", () => {
+        isConnected = false;
+        document.querySelector("#realtimeUpdates").innerHTML = `
+                <div class="text-red-400">❌ Disconnected from real-time updates</div>
+            `;
+      });
+
+      socket.on("metrics_update", (data) => {
+        if (data.data) {
+          document.getElementById("totalRevenue").textContent =
+            "$" + (data.data.totalRevenue || 0).toFixed(2);
+          document.getElementById("totalRequests").textContent =
+            data.data.totalRequests || 0;
+          document.getElementById("profitMargin").textContent =
+            (data.data.performance?.profitMargin || 0) + "%";
+          document.getElementById("activeKeys").textContent =
+            data.data.totalKeys || 0;
+          document.getElementById("lastUpdate").textContent =
+            new Date().toLocaleString();
+        }
+      });
+
+      socket.on("ai_response", (data) => {
+        if (data.data) {
+          const metaDiv = document.getElementById("responseMeta");
+          metaDiv.innerHTML = `
+                    <div>Provider: ${data.data.actualProvider || "Unknown"}</div>
+                    <div>Model: ${data.data.actualModel || "Unknown"}</div>
+                    <div>Tokens: ${data.data.tokensUsed || 0}</div>
+                    <div>Cost: $${(data.data.actualCost || 0).toFixed(4)}</div>
+                    <div>Margin: ${data.data.profitMargin || "0"}%</div>
+                `;
+        }
+      });
+
+      // Generate API Key
+      async function generateKey() {
+        const userId = document.getElementById("userId").value;
+        const tier = document.getElementById("tier").value;
+
+        if (!userId) {
+          alert("Please enter a User ID");
+          return;
+        }
+
+        try {
+          const response = await fetch("/api/v1/generate-key", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, tier }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            const keyDiv = document.getElementById("generatedKey");
+            const keyValue = document.getElementById("keyValue");
+            keyDiv.textContent = result.apiKey;
+            keyValue.textContent = result.apiKey;
+            keyDiv.classList.remove("hidden");
+
+            // Update real-time metrics
+            setTimeout(() => checkMetrics(), 1000);
+          } else {
+            alert("Error: " + (result.error || "Unknown error"));
+          }
+        } catch (error) {
+          alert("Error generating key: " + error.message);
+        }
+      }
+
+      // Test AI
+      async function testAI() {
+        const apiKey = document.getElementById("testApiKey").value;
+        const prompt = document.getElementById("testPrompt").value;
+
+        if (!apiKey || !prompt) {
+          alert("Please enter both API key and prompt");
+          return;
+        }
+
+        try {
+          const responseDiv = document.getElementById("aiResponse");
+          const responseValue = document.getElementById("responseValue");
+          responseDiv.textContent = "Processing...";
+          responseValue.textContent = "";
+
+          const response = await fetch("/api/v1/synova-ai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt, apiKey }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            responseValue.textContent = result.response;
+
+            // Update metadata
+            const metaDiv = document.getElementById("responseMeta");
+            metaDiv.innerHTML = `
+                        <div>Provider: ${result.actualProvider || "Unknown"}</div>
+                        <div>Model: ${result.actualModel || "Unknown"}</div>
+                        <div>Tokens: ${result.tokensUsed || 0}</div>
+                        <div>Cost: $${(result.actualCost || 0).toFixed(4)}</div>
+                        <div>Margin: ${result.profitMargin || "0"}%</div>
+                        <div>Routing: ${result.routingReason || "Default"}</div>
+                    `;
+
+            responseDiv.classList.remove("hidden");
+          } else {
+            responseValue.textContent =
+              "Error: " + (result.error || "Unknown error");
+            responseDiv.classList.remove("hidden");
+          }
+        } catch (error) {
+          document.getElementById("responseValue").textContent =
+            "Error: " + error.message;
+          document.getElementById("aiResponse").classList.remove("hidden");
+        }
+      }
+
+      // Check metrics
+      async function checkMetrics() {
+        try {
+          const response = await fetch("/api/v1/analytics");
+          const result = await response.json();
+
+          if (result.success) {
+            document.getElementById("totalRevenue").textContent =
+              "$" + (result.analytics.totalRevenue || 0).toFixed(2);
+            document.getElementById("totalRequests").textContent =
+              result.analytics.totalRequests || 0;
+            document.getElementById("profitMargin").textContent =
+              (result.analytics.performance.profitMargin || 0) + "%";
+            document.getElementById("activeKeys").textContent =
+              result.analytics.totalKeys || 0;
+          }
+        } catch (error) {
+          console.error("Error checking metrics:", error);
+        }
+      }
+
+      // Check provider status
+      async function checkProviderStatus() {
+        try {
+          const response = await fetch("/api/v1/providers");
+          const result = await response.json();
+
+          if (result.success && result.providers) {
+            result.providers.forEach((provider) => {
+              const statusEl = document.getElementById(
+                provider.name.toLowerCase().replace(" ", "") + "Status",
+              );
+              if (statusEl) {
+                statusEl.textContent = provider.available
+                  ? "✅ Available"
+                  : "❌ Unavailable";
+                statusEl.className = provider.available
+                  ? "text-green-400"
+                  : "text-red-400";
+              }
+            });
+          }
+        } catch (error) {
+          console.error("Error checking provider status:", error);
+        }
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", () => {
+        checkMetrics();
+        checkProviderStatus();
+
+        // Auto-refresh metrics every 30 seconds
+        setInterval(checkMetrics, 30000);
+      });
+    </script>
+  </body>
+</html>
