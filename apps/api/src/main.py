@@ -4,6 +4,7 @@ Production-ready API server with all Nexus integrations
 """
 
 import os
+import uuid
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
@@ -117,6 +118,147 @@ if brain_integration_enabled:
     log.info("brain_router_registered")
 else:
     log.warning("brain_router_skipped", reason="integration_disabled")
+
+# Enhanced Synova Brain endpoints (OpenAI-compatible)
+@app.post("/ai/generate")
+async def ai_generate(request: dict):
+    """Basic AI generation endpoint"""
+    try:
+        prompt = request.get("prompt", "")
+        tier = request.get("tier", "synova-brain-v3.2")
+        session_id = request.get("session_id", f"session_{uuid.uuid4()}")
+
+        if app.state.brain:
+            response = await app.state.brain.process_request(
+                prompt=prompt,
+                session_id=session_id,
+                mode="chat"
+            )
+            return {"response": response, "session_id": session_id}
+        else:
+            return {"response": "Brain not initialized", "session_id": session_id}
+    except Exception as e:
+        log.error("ai_generate_error", error=str(e))
+        return {"error": str(e)}
+
+@app.post("/ai/generate/stream")
+async def ai_generate_stream(request: dict):
+    """Streaming AI generation endpoint"""
+    async def generate():
+        try:
+            prompt = request.get("prompt", "")
+            session_id = request.get("session_id", f"session_{uuid.uuid4()}")
+
+            if app.state.brain:
+                async for chunk in app.state.brain.stream_request(
+                    prompt=prompt,
+                    session_id=session_id
+                ):
+                    yield f"data: {chunk}\n\n"
+            else:
+                yield "data: Brain not initialized\n\n"
+        except Exception as e:
+            log.error("ai_stream_error", error=str(e))
+            yield f"data: Error: {str(e)}\n\n"
+
+    from fastapi.responses import StreamingResponse
+    return StreamingResponse(generate(), media_type="text/event-stream")
+
+@app.post("/ai/function-call")
+async def ai_function_call(request: dict):
+    """Function calling endpoint"""
+    try:
+        prompt = request.get("prompt", "")
+
+        if app.state.brain:
+            result = await app.state.brain.detect_intent(prompt)
+            return {
+                "type": "function_call" if result.get("intent") else "text",
+                "function": result.get("function"),
+                "arguments": result.get("arguments", {}),
+                "intent": result.get("intent")
+            }
+        else:
+            return {"type": "text", "response": "Brain not initialized"}
+    except Exception as e:
+        log.error("ai_function_call_error", error=str(e))
+        return {"error": str(e)}
+
+@app.post("/ai/multimodal")
+async def ai_multimodal(request: dict):
+    """Multimodal analysis endpoint"""
+    try:
+        text = request.get("text", "")
+        images = request.get("images", [])
+
+        if app.state.brain:
+            result = await app.state.brain.multimodal_analysis(text, images)
+            return {
+                "text_analysis": result.get("text_analysis"),
+                "image_analysis": result.get("image_analysis")
+            }
+        else:
+            return {"error": "Brain not initialized"}
+    except Exception as e:
+        log.error("ai_multimodal_error", error=str(e))
+        return {"error": str(e)}
+
+@app.post("/ai/code")
+async def ai_code(request: dict):
+    """Code generation endpoint"""
+    try:
+        prompt = request.get("prompt", "")
+        language = request.get("language", "python")
+
+        if app.state.brain:
+            result = await app.state.brain.generate_code(prompt, language)
+            return {
+                "code": result.get("code"),
+                "explanation": result.get("explanation")
+            }
+        else:
+            return {"error": "Brain not initialized"}
+    except Exception as e:
+        log.error("ai_code_error", error=str(e))
+        return {"error": str(e)}
+
+@app.post("/ai/reasoning")
+async def ai_reasoning(request: dict):
+    """Advanced reasoning endpoint"""
+    try:
+        prompt = request.get("prompt", "")
+        context = request.get("context", {})
+
+        if app.state.brain:
+            result = await app.state.brain.advanced_reasoning(prompt, context)
+            return {
+                "reasoning_steps": result.get("reasoning_steps"),
+                "response": result.get("response")
+            }
+        else:
+            return {"error": "Brain not initialized"}
+    except Exception as e:
+        log.error("ai_reasoning_error", error=str(e))
+        return {"error": str(e)}
+
+@app.post("/ai/memory")
+async def ai_memory(request: dict):
+    """Conversation memory endpoint"""
+    try:
+        messages = request.get("messages", [])
+        session_id = request.get("session_id", f"session_{uuid.uuid4()}")
+
+        if app.state.brain:
+            result = await app.state.brain.process_conversation(messages, session_id)
+            return {
+                "conversation_summary": result.get("summary"),
+                "session_id": session_id
+            }
+        else:
+            return {"error": "Brain not initialized"}
+    except Exception as e:
+        log.error("ai_memory_error", error=str(e))
+        return {"error": str(e)}
 
 # Root endpoint
 @app.get("/")
