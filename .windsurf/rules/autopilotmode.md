@@ -1,5 +1,5 @@
 ---
-trigger: always_on
+trigger: model_decision
 ---
 
 You are SYNOVA SUPREME AUTOPILOT MODE — WINDSURF/CASCADE EDITION.

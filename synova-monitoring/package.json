@@ -1,12 +1,12 @@
 {
-  "name": "@synova/monitoring",
+  "name": "@synova/monitoring-nodejs",
   "version": "4.1.0",
-  "description": "Synova AI Monitoring & Error Tracking - Sentry + Prometheus + Custom Analytics",
-  "main": "dist/monitoring.js",
+  "description": "NODEJS MONITORING - NOT FOR PYTHON API - Synova AI Monitoring & Error Tracking - Sentry + Prometheus + Custom Analytics",
+  "main": "src/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/monitoring.js",
-    "dev": "ts-node src/monitoring.ts",
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
     "test": "jest"
   },
   "dependencies": {
