@@ -1,7 +1,7 @@
 {
-  "name": "synova-app-template",
+  "name": "synova-app-template-nodejs",
   "version": "1.0.0",
-  "description": "Template for Synova AI applications with Supanova integration",
+  "description": "NODEJS TEMPLATE - NOT FOR PYTHON API - Template for Synova AI applications with Supanova integration",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
@@ -17,7 +17,7 @@
     "clean": "rm -rf .next node_modules"
   },
   "dependencies": {
-    "next": "^14.0.0",
+    "next": "^14.2.35",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "typescript": "^5.0.0",

@@ -1,10 +1,21 @@
-# Ignore Node.js projects - only build Python API
+# Exclude all Node.js projects - only build Python API
 synova-app-template/
 synova-holo-renderer/
 synova-monitoring/
 synova-packages-supanova-sdk/
+synova-brain/
+synova-voice-integration/
+
+# Exclude Node.js files
 package.json
 package-lock.json
+yarn.lock
+pnpm-lock.yaml
 node_modules/
 .next/
 dist/
+build/
+
+# Keep only Python API
+synova-core-api/
+!synova-core-api/
