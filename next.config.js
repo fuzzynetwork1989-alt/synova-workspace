@@ -1,31 +1,31 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  turbopack: {},
+  output: 'export',
   allowedDevOrigins: ['127.0.0.1', 'localhost'],
-  
+
   // CDN Configuration
-  assetPrefix: process.env.NODE_ENV === 'production' 
-    ? 'https://cdn.synova.ai' 
+  assetPrefix: process.env.NODE_ENV === 'production'
+    ? 'https://cdn.synova.ai'
     : undefined,
-    
+
   // Image optimization
   images: {
     domains: ['cdn.synova.ai'],
     loader: 'custom',
     loaderFile: './lib/image-loader.js',
   },
-  
+
   // Static file caching
   generateEtags: false,
-  
+
   // Compression
   compress: true,
-  
+
   // Security headers
   async headers() {
     const headers = [];
-    
+
     if (process.env.NODE_ENV === 'production') {
       headers.push({
         source: '/_next/static/(.*)',
@@ -40,7 +40,7 @@ const nextConfig = {
           },
         ],
       });
-      
+
       headers.push({
         source: '/uploads/(.*)',
         headers: [
@@ -51,7 +51,7 @@ const nextConfig = {
         ],
       });
     }
-    
+
     return headers;
   },
   webpack: (config, { isServer }) => {
