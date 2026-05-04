@@ -9,5 +9,15 @@
     "git.branchProtectionPrompt": "alwaysCommit",
     "git.enableSmartCommit": true,
     "git.fetchOnPull": true,
-    "github-actions.workflows.pinned.refresh.enabled": false
+    "github-actions.workflows.pinned.refresh.enabled": false,
+    "js/ts.tsdk.path": "node_modules\\typescript\\lib",
+    "cSpell.words": [
+        "errorlevel",
+        "isoformat",
+        "Supanova",
+        "Synova",
+        "tauri",
+        "Tauri",
+        "venv"
+    ]
 }

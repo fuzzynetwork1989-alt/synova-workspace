@@ -1,4 +1,4 @@
-@echo off
+@echo on
 echo Activating
 
  Synova AI Environment...

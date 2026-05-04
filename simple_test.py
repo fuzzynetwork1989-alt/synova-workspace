@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """
 Simple test to check Railway API status
@@ -13,7 +14,7 @@ def test_railway_api():
         "timestamp": datetime.now().isoformat(),
         "tests": []
     }
-    
+
     # Test health endpoint
     try:
         response = requests.get("https://synova-ai-production.up.railway.app/health", timeout=10)
@@ -32,7 +33,7 @@ def test_railway_api():
             "error": str(e)
         })
         print(f"Health check error: {e}")
-    
+
     # Test root endpoint
     try:
         response = requests.get("https://synova-ai-production.up.railway.app/", timeout=10)
@@ -51,17 +52,17 @@ def test_railway_api():
             "error": str(e)
         })
         print(f"Root endpoint error: {e}")
-    
+
     # Save results
     with open("railway_test_results.json", "w") as f:
         json.dump(results, f, indent=2)
-    
+
     # Summary
     passed = sum(1 for test in results["tests"] if test["success"])
     total = len(results["tests"])
-    
+
     print(f"\nSummary: {passed}/{total} tests passed")
-    
+
     return results
 
 if __name__ == "__main__":
