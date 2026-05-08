@@ -12,12 +12,26 @@
     "github-actions.workflows.pinned.refresh.enabled": false,
     "js/ts.tsdk.path": "node_modules\\typescript\\lib",
     "cSpell.words": [
+        "Astranova",
+        "coworking",
+        "elif",
         "errorlevel",
         "isoformat",
+        "MINIPC",
+        "monitorable",
+        "multimodal",
+        "numpy",
+        "pgvector",
+        "randint",
+        "setex",
         "Supanova",
         "Synova",
         "tauri",
         "Tauri",
-        "venv"
-    ]
+        "venv",
+        "xcopy"
+    ],
+    "files.readonlyInclude": {
+        "{**/.c4z/.extsrcs/*.PROTSYM.cbl,**/.c4z/.extsrcs/*.PROTSYM.listing}": true
+    }
 }

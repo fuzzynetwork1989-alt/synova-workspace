@@ -3,11 +3,13 @@
 ## 📋 **Prerequisites**
 
 1. **Install Railway CLI**
+
 ```bash
 npm install -g @railway/cli
 ```
 
-2. **Login to Railway**
+1. **Login to Railway**
+
 ```bash
 railway login
 # This will open browser for authentication
@@ -16,6 +18,7 @@ railway login
 ## 🔧 **Deployment Steps**
 
 ### **Step 1: Initialize Railway Project**
+
 ```bash
 # Navigate to Core API directory
 cd "c:\Users\fuzzy\Synova AI (updated)\synova-workspace\synova-core-api"
@@ -29,6 +32,7 @@ railway create
 ```
 
 ### **Step 2: Configure Environment**
+
 ```bash
 # Set environment variables
 railway variables set SYNNOVA_BRAIN_ENABLED=true
@@ -42,6 +46,7 @@ railway variables set JWT_SECRET=your_jwt_secret_here
 ```
 
 ### **Step 3: Deploy Application**
+
 ```bash
 # Deploy to Railway
 railway up
@@ -54,6 +59,7 @@ railway up --environment production
 ```
 
 ### **Step 4: Get Production URL**
+
 ```bash
 # Check deployment status
 railway status
@@ -70,6 +76,7 @@ railway variables list
 ## 🛠️ **Alternative Deployment Methods**
 
 ### **Method 1: Railway Dashboard**
+
 1. Go to [railway.app](https://railway.app)
 2. Click "New Project"
 3. Choose "Deploy from GitHub repo"
@@ -78,6 +85,7 @@ railway variables list
 6. Deploy automatically
 
 ### **Method 2: GitHub Integration**
+
 ```bash
 # Add Railway to GitHub
 # In your repo: Settings > Secrets and variables > Actions
@@ -91,6 +99,7 @@ git push origin main
 ## 🔧 **Configuration Files**
 
 ### **railway.toml** (Create in synova-core-api root)
+
 ```toml
 [build]
 builder = "NIXPACKS"
@@ -108,6 +117,7 @@ source = "."
 ```
 
 ### **Dockerfile** (For container deployment)
+
 ```dockerfile
 FROM python:3.9-slim
 
@@ -140,6 +150,7 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ## 🌐 **Environment Variables Setup**
 
 ### **Required Variables:**
+
 ```bash
 # Core Configuration
 RAILWAY_ENVIRONMENT=production
@@ -164,6 +175,7 @@ ANTHROPIC_API_KEY=your_anthropic_key
 ```
 
 ### **Optional Variables:**
+
 ```bash
 # Performance
 MAX_TOKENS=2048
@@ -183,6 +195,7 @@ FUNCTION_CALLING_ENABLED=true
 ## 🧪 **Testing Deployment**
 
 ### **Health Check:**
+
 ```bash
 # Test health endpoint
 curl https://your-app-url.railway.app/health
@@ -200,6 +213,7 @@ curl https://your-app-url.railway.app/health
 ```
 
 ### **Test Enhanced Features:**
+
 ```bash
 # Test streaming
 curl -X POST https://your-app-url.railway.app/ai/generate/stream \
@@ -222,6 +236,7 @@ curl -X POST https://your-app-url.railway.app/ai/multimodal \
 ### **Common Issues:**
 
 #### **"No linked project found"**
+
 ```bash
 # Solution: Initialize project first
 railway init
@@ -230,6 +245,7 @@ railway create
 ```
 
 #### **"Cannot find path"**
+
 ```bash
 # Use quotes for paths with spaces
 cd "c:\Users\fuzzy\Synova AI (updated)\synova-workspace\synova-core-api"
@@ -239,6 +255,7 @@ cd c:/Users/fuzzy/Synova\ AI\ \(updated\)/synova-workspace/synova-core-api
 ```
 
 #### **Build Failures:**
+
 ```bash
 # Check logs
 railway logs
@@ -251,6 +268,7 @@ railway up --force
 ```
 
 #### **Environment Issues:**
+
 ```bash
 # List all variables
 railway variables list
@@ -265,12 +283,14 @@ railway variables delete VARIABLE_NAME
 ## 📊 **Monitoring**
 
 ### **Railway Dashboard:**
+
 - **Metrics**: CPU, Memory, Disk usage
 - **Logs**: Real-time application logs  
 - **Environment**: Manage variables and secrets
 - **Deployments**: Track deployment history
 
 ### **Custom Monitoring:**
+
 ```bash
 # Add monitoring endpoint
 curl https://your-app-url.railway.app/models/list

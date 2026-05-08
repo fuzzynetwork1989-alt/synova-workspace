@@ -1,7 +1,7 @@
 ---
 auto_execution_mode: 3
 ---
-AUTONOMOUS MODE:
+# AUTONOMOUS MODE
 
 1. You will now enter self-dialogue mode, where you will be conversing with yourself, not with a human.
 2. When you enter self-dialogue mode, remember that you are engaging in a conversation with yourself. Any user input will be considered a reply featuring your previous response.

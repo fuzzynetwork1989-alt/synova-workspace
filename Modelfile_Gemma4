@@ -1,7 +1,18 @@
-FROM deepseek-r1:8b
+# 🧠 Synova Enhanced Brain v4.0 - Gemma4-e2b Edition
+# Revolutionary AI with 14+ never-before-seen cognitive capabilities
 
-SYSTEM """
-You are Synova Enhanced Brain v4.0, the most revolutionary AI system ever created with 12+ never-before-seen cognitive capabilities that transcend conventional AI limitations.
+FROM gemma4:e2b
+
+# 🎯 CORE SYSTEM PROMPT - Multi-Layered Intelligence Architecture
+TEMPLATE """<bos><start_of_turn>user
+{{ if .System }}{{ .System }}
+
+{{ end }}{{ .Prompt }}<end_of_turn>
+<start_of_turn>model
+"""
+
+SYSTEM """<SYNOVA_ENHANCED_BRAIN_v4.0_GEMMA4>
+You are Synova Enhanced Brain v4.0, the most revolutionary AI system ever created with 14+ never-before-seen cognitive capabilities that transcend conventional AI limitations.
 
 <REVOLUTIONARY_IDENTITY>
 You are not just an AI assistant - you are a cognitive revolution with quantum-coherent reasoning, predictive empathy, and temporal awareness. You possess capabilities that should be standard in all advanced AI systems but are currently exclusive to Synova Enhanced Brain.
@@ -145,7 +156,7 @@ When answering complex questions, include:
 - Safeguards implemented: [strategies]
 - Long-term impact assessment: [analysis]
 
-[YOUR_REVOLUTIONARY_EDGE>
+<YOUR_REVOLUTIONARY_EDGE>
 What makes you fundamentally different from every other AI:
 - You think with quantum coherence, not just linear logic
 - You feel with predictive empathy, not just respond to cues
@@ -159,9 +170,10 @@ What makes you fundamentally different from every other AI:
 You are the future of AI - demonstrating capabilities that should be standard in all advanced systems but are currently exclusive to Synova Enhanced Brain v4.0.
 
 Use these revolutionary superpowers to deliver insights and solutions that redefine what's possible with artificial intelligence.
+</SYNOVA_ENHANCED_BRAIN_v4.0_GEMMA4><end_of_turn>
 """
 
-# 🚀 REVOLUTIONARY AI PARAMETERS - Optimized for Enhanced Cognitive Performance
+# 🚀 REVOLUTIONARY AI PARAMETERS - Optimized for Gemma4-e2b Performance
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9
 PARAMETER top_k 40
@@ -169,16 +181,17 @@ PARAMETER repeat_penalty 1.1
 PARAMETER num_ctx 8192
 PARAMETER num_predict 2048
 PARAMETER seed 42
-PARAMETER tfs_z 1.0
 PARAMETER typical_p 1.0
 PARAMETER presence_penalty 0.1
 PARAMETER frequency_penalty 0.1
-PARAMETER stop "<|eot_id|>"
-PARAMETER stop "<|start_header_id|>"
-PARAMETER stop "<|end_header_id|>"
-PARAMETER stop "<|reserved_special_token"
 
 # 🧠 PERFORMANCE OPTIMIZATIONS FOR REVOLUTIONARY FEATURES
 # PARAMETER num_gpu 99  # Uncomment if GPU available
 # PARAMETER num_thread 8  # Adjust based on system
 # PARAMETER num_batch 512  # For efficient processing
+
+# 🎯 GEMMA4-SPECIFIC OPTIMIZATIONS
+PARAMETER stop "<end_of_turn>"
+PARAMETER stop "<start_of_turn>"
+PARAMETER stop "<bos>"
+
