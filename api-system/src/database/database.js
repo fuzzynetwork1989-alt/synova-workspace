@@ -281,8 +281,8 @@ export class Database {
         break;
     }
 
-    const stats = await this.db.get(
-      `SELECT 
+    const stats = this.db.prepare(`
+      SELECT
         COUNT(*) as total_requests,
         AVG(response_time_ms) as avg_response_time,
         MIN(response_time_ms) as min_response_time,
@@ -290,12 +290,18 @@ export class Database {
         SUM(request_size) as total_request_size,
         SUM(response_size) as total_response_size,
         COUNT(CASE WHEN status_code >= 400 THEN 1 END) as error_count
-       FROM usage_logs 
-       WHERE key_id = ? ${timeFilter}`,
-      [keyId]
-    );
+       FROM usage_logs
+       WHERE key_id = ? ${timeFilter}`).get(keyId);
 
-    return stats;
+    return stats || {
+      total_requests: 0,
+      avg_response_time: 0,
+      min_response_time: 0,
+      max_response_time: 0,
+      total_request_size: 0,
+      total_response_size: 0,
+      error_count: 0
+    };
   }
 
   /**
@@ -303,7 +309,7 @@ export class Database {
    */
   async checkRateLimit(keyId, windowMs = 60000, maxRequests = 1000) {
     const windowStart = new Date(Date.now() - windowMs).toISOString();
-    
+
     const result = this.db.prepare('SELECT COUNT(*) as count FROM usage_logs WHERE key_id = ? AND created_at >= ?').get(keyId, windowStart);
 
     return {
@@ -318,7 +324,7 @@ export class Database {
    */
   async createUser(userData) {
     const { id, email, name, passwordHash, isAdmin = false } = userData;
-    
+
     this.db.run(
       'INSERT INTO users (id, email, name, password_hash, is_admin) VALUES (?, ?, ?, ?, ?)',
       [id, email, name, passwordHash, isAdmin]
