@@ -1,0 +1,144 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "Root"
+    },
+    {
+      "path": "synova-core-api",
+      "name": "Core API"
+    },
+    {
+      "path": "synova-ui-system",
+      "name": "UI System"
+    },
+    {
+      "path": "synova-holo-renderer",
+      "name": "Holo Renderer"
+    },
+    {
+      "path": "synova-brain",
+      "name": "Brain Service"
+    },
+    {
+      "path": "synova-voice-integration",
+      "name": "Voice Integration"
+    },
+    {
+      "path": "synova-monitoring",
+      "name": "Monitoring"
+    },
+    {
+      "path": "synova-packages-supanova-sdk",
+      "name": "Supanova SDK"
+    },
+    {
+      "path": "synova-app-template",
+      "name": "App Template"
+    },
+    {
+      "path": "synova-xr-workspace",
+      "name": "XR Workspace"
+    },
+    {
+      "path": "synova-revenue",
+      "name": "Revenue Service"
+    },
+    {
+      "path": "apps/web",
+      "name": "Web App"
+    },
+    {
+      "path": "apps/mobile",
+      "name": "Mobile App"
+    },
+    {
+      "path": "apps/desktop",
+      "name": "Desktop App"
+    },
+    {
+      "path": "apps/api",
+      "name": "API System"
+    }
+  ],
+  "settings": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.formatting.provider": "black",
+    "[python]": {
+      "editor.defaultFormatter": "ms-python.python",
+      "editor.formatOnSave": true
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "files.exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/node_modules": true,
+      "**/__pycache__": true,
+      "**/.pytest_cache": true,
+      "**/.venv": true,
+      "**/venv": true,
+      "**/.env.local": true,
+      "**/.env.*.local": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/.venv": true,
+      "**/venv": true,
+      "**/__pycache__": true,
+      "**/.git": true,
+      "**/dist": true,
+      "**/build": true
+    },
+    "git.ignoreLimitWarning": true,
+    "docker.showDebugOutput": true,
+    "docker.commands.build": "docker build --rm -f \"Dockerfile\" -t {imageTag} \"{context}\"",
+    "docker.commands.run": "docker run --rm -d {exposedPorts} {image}",
+    "docker.commands.runInteractive": "docker run --rm -it {exposedPorts} {image}",
+    "docker.commands.push": "docker push {image}",
+    "docker.commands.tag": "docker tag {image} {tag}",
+    "docker.commands.remove": "docker rmi {image}",
+    "docker.commands.help": "docker run --rm {image} --help"
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "docker.docker",
+      "eamodio.gitlens",
+      "github.copilot",
+      "ms-vscode-remote.remote-containers"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Full Stack",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/scripts/start-all.sh",
+        "console": "integratedTerminal"
+      }
+    ]
+  }
+}
