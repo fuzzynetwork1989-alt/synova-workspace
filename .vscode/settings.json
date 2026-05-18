@@ -1,16 +1,5 @@
 {
-    "markdown.validate.enabled": true,
-    "python.languageServer": "None",
-    "python.terminal.useEnvFile": true,
-    "application.experimental.rendererProfiling": true,
     "cSpell.suggestionMenuType": "quickFix",
-    "eslint.format.enable": true,
-    "eslint.lintTask.enable": true,
-    "git.branchProtectionPrompt": "alwaysCommit",
-    "git.enableSmartCommit": true,
-    "git.fetchOnPull": true,
-    "github-actions.workflows.pinned.refresh.enabled": false,
-    "js/ts.tsdk.path": "node_modules\\typescript\\lib",
     "cSpell.words": [
         "Astranova",
         "coworking",
@@ -31,7 +20,27 @@
         "venv",
         "xcopy"
     ],
+    "launch": {
+      "inputs": [],
+      "configurations": [
+        {
+          "name": "Debug Synova Desktop",
+          "type": "node",
+          "request": "launch",
+          "program": "${workspaceFolder}/desktop/main.js",
+          "cwd": "${workspaceFolder}/desktop",
+          "runtimeArgs": ["--inspect=9229"],
+          "console": "integratedTerminal"
+        }
+      ],
+      "compounds": [
+        {
+          "name": "Debug Synova Desktop + Backend",
+          "configurations": ["Debug Synova Desktop", "Debug Backend"]
+        }
+      ]
+    },
     "files.readonlyInclude": {
-        "{**/.c4z/.extsrcs/*.PROTSYM.cbl,**/.c4z/.extsrcs/*.PROTSYM.listing}": true
+      "{**/.c4z/.extsrcs/*.PROTSYM.cbl,**/.c4z/.extsrcs/*.PROTSYM.listing}": true
     }
 }

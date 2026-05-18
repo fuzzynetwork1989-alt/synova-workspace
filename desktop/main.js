@@ -1,15 +1,28 @@
-const { app, BrowserWindow, Menu, shell } = require('electron');
+const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
 const isDev = process.env.NODE_ENV === 'development';
 
 let mainWindow;
+let modelRegistry = null;
+
+function loadModelRegistry() {
+  try {
+    const registryPath = path.join(__dirname, '..', 'synova-nexus', 'models', 'model-registry.ts');
+    if (fs.existsSync(registryPath)) {
+      console.log('Model registry path found:', registryPath);
+    }
+  } catch (error) {
+    console.error('Failed to load model registry:', error);
+  }
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    minWidth: 800,
-    minHeight: 600,
+    width: 1400,
+    height: 900,
+    minWidth: 1000,
+    minHeight: 700,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -18,7 +31,8 @@ function createWindow() {
     },
     icon: path.join(__dirname, 'assets', 'icon.png'),
     show: false,
-    titleBarStyle: 'default'
+    titleBarStyle: 'default',
+    backgroundColor: '#0f0c29'
   });
 
   // Load the app
@@ -31,6 +45,7 @@ function createWindow() {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
+    loadModelRegistry();
   });
 
   mainWindow.on('closed', () => {
@@ -42,6 +57,9 @@ function createWindow() {
     shell.openExternal(url);
     return { action: 'deny' };
   });
+
+  // Setup IPC handlers
+  setupIPCHandlers();
 }
 
 function createMenu() {
@@ -133,3 +151,42 @@ app.on('window-all-closed', () => {
 });
 
 app.setAsDefaultProtocolClient('synova');
+
+// IPC Handlers
+function setupIPCHandlers() {
+  // Get available models
+  ipcMain.handle('get-models', async () => {
+    const models = [
+      { id: 'synova-nexus', name: 'Synova Nexus', tier: 'standard', description: 'Advanced AI assistant' },
+      { id: 'synova-nexus-pro', name: 'Synova Nexus Pro', tier: 'pro', description: 'Professional-grade model' },
+      { id: 'synova-nexus-ultra', name: 'Synova Nexus Ultra', tier: 'ultra', description: 'Ultimate frontier model' },
+      { id: 'synova-nexus-voice', name: 'Synova Nexus Voice', tier: 'standard', description: 'Voice-specialized model' },
+      { id: 'synova-nexus-xr', name: 'Synova Nexus XR', tier: 'standard', description: 'Extended reality model' },
+      { id: 'synova-deepseek-quantum', name: 'Synova DeepSeek Quantum', tier: 'pro', description: 'Quantum-enhanced coding' },
+      { id: 'synova-gemma4-quantum', name: 'Synova Gemma4 Quantum', tier: 'pro', description: 'Quantum multimodal' },
+      { id: 'synova-gemma4-quantum-elite', name: 'Synova Gemma4 Quantum Elite', tier: 'ultra', description: 'Elite quantum model' },
+      { id: 'synova-neural-quantum', name: 'Synova Neural Quantum', tier: 'pro', description: 'Neural quantum model' },
+      { id: 'synova-omni-nexus', name: 'Synova Omni Nexus', tier: 'pro', description: 'Omni-capable model' },
+      { id: 'synova-quantum-nexus', name: 'Synova Quantum Nexus', tier: 'ultra', description: 'Quantum nexus model' },
+      { id: 'synova-nexus-enhanced', name: 'Synova Nexus Enhanced', tier: 'standard', description: 'Enhanced cognitive model' }
+    ];
+    return models;
+  });
+
+  // Get model configuration
+  ipcMain.handle('get-model-config', async (_event, modelId) => {
+    // Return model configuration based on ID
+    return { id: modelId, name: modelId, loaded: true };
+  });
+
+  // Switch model
+  ipcMain.handle('switch-model', async (_event, modelId) => {
+    console.log('Switching to model:', modelId);
+    return { success: true, modelId };
+  });
+
+  // Get app version
+  ipcMain.handle('get-app-version', async () => {
+    return app.getVersion();
+  });
+}

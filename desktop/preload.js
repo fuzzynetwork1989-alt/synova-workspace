@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
   
   // App version
-  getVersion: () => process.env.npm_package_version,
+  getVersion: () => ipcRenderer.invoke('get-app-version'),
   
   // Window controls
   minimize: () => ipcRenderer.invoke('minimize-window'),
@@ -23,7 +23,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   saveFile: (data, filename) => ipcRenderer.invoke('save-file', data, filename),
   
   // System info
-  getSystemInfo: () => ipcRenderer.invoke('get-system-info')
+  getSystemInfo: () => ipcRenderer.invoke('get-system-info'),
+
+  // Model operations
+  getModels: () => ipcRenderer.invoke('get-models'),
+  getModelConfig: (modelId) => ipcRenderer.invoke('get-model-config', modelId),
+  switchModel: (modelId) => ipcRenderer.invoke('switch-model', modelId)
 });
 
 // Security: prevent node integration in renderer

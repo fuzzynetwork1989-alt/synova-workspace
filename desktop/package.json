@@ -4,6 +4,7 @@
   "description": "Synova AI Desktop Application",
   "main": "main.js",
   "homepage": "./",
+  "author": "Synova AI Technologies",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
