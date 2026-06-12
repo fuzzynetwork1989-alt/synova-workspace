@@ -1,0 +1,15 @@
+{
+  "name": "synova-workspace-monorepo-root",
+  "version": "1.0.0",
+  "description": "MONOREPO ROOT - NOT FOR DEPLOYMENT - Synova AI Workspace - Multi-project repository",
+  "private": true,
+  "workspaces": [
+    "synova-app-template",
+    "synova-holo-renderer",
+    "synova-monitoring"
+  ],
+  "scripts": {
+    "dev:api": "cd synova-core-api && python main.py",
+    "test:api": "cd synova-core-api && pytest"
+  }
+}

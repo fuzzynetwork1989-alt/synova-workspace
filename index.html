@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synova AI - The Frontier-Class AI Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        * { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-gradient { background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3); }
+        .floating { animation: floating 3s ease-in-out infinite; }
+        @keyframes floating { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); } 50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.8); } }
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        .layer-card { transition: all 0.4s ease; cursor: pointer; }
+        .layer-card:hover { transform: scale(1.05); z-index: 10; }
+        .layer-card.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .pricing-card { transition: all 0.3s ease; }
+        .pricing-card:hover { transform: scale(1.05); }
+        .pricing-card.featured { border: 2px solid #667eea; transform: scale(1.05); }
+        .pricing-card.featured:hover { transform: scale(1.08); }
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transition: width 0.3s ease; }
+        .nav-link:hover::after { width: 100%; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4); }
+        .progress-bar { height: 4px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: fixed; top: 0; left: 0; z-index: 1000; transition: width 0.3s ease; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="progress-bar" id="progressBar"></div>
+    <nav class="fixed top-0 left-0 w-full z-50 bg-opacity-90 backdrop-blur-lg bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold gradient-text">Synova AI</span>
+                </div>
+                <div class="flex space-x-8">
+                    <a href="#features" class="nav-link text-gray-300 hover:text-white transition">Features</a>
+                    <a href="#architecture" class="nav-link text-gray-300 hover:text-white transition">Architecture</a>
+                    <a href="#pricing" class="nav-link text-gray-300 hover:text-white transition">Pricing</a>
+                    <a href="#comparison" class="nav-link text-gray-300 hover:text-white transition">Compare</a>
+                    <a href="#roadmap" class="nav-link text-gray-300 hover:text-white transition">Roadmap</a>
+                    <button class="btn-primary px-6 py-2 rounded-full text-white font-semibold">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 floating"></div>
+            <div class="absolute top-40 right-10 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 floating" style="animation-delay: 1s;"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 py-20 relative z-10 text-center">
+            <i class="fas fa-brain text-8xl gradient-text mb-8 floating"></i>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 fade-in"><span class="gradient-text">Synova AI</span></h1>
+            <p class="text-xl md:text-2xl text-gray-300 mb-8 fade-in">The Frontier-Class AI Platform with Deep Resonance Thinking</p>
+            <p class="text-lg text-gray-400 mb-12 max-w-3xl mx-auto fade-in">Revolutionary 6-layer cognitive architecture meets production multi-agent orchestration. Experience AI that thinks deeper, collaborates better, and learns continuously.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in">
+                <button class="btn-primary px-8 py-4 rounded-full text-white font-semibold text-lg pulse-glow"><i class="fas fa-rocket mr-2"></i>Start Free Trial</button>
+                <button class="border-2 border-purple-500 px-8 py-4 rounded-full text-white font-semibold text-lg hover:bg-purple-500 transition"><i class="fas fa-play mr-2"></i>Watch Demo</button>
+            </div>
+            <div class="mt-16 flex justify-center gap-8 fade-in">
+                <div class="text-center"><div class="text-4xl font-bold gradient-text">6</div><div class="text-gray-400">Cognitive Layers</div></div>
+                <div class="text-center"><div class="text-4xl font-bold gradient-text">5</div><div class="text-gray-400">Specialized Agents</div></div>
+                <div class="text-center"><div class="text-4xl font-bold gradient-text">3x</div><div class="text-gray-400">Deeper Reasoning</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 gradient-text">Powerful Features</h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">Everything you need to build the next generation of AI applications</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-800 rounded-2xl p-8 card-hover fade-in">
+                    <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6"><i class="fas fa-brain text-3xl text-white"></i></div>
+                    <h3 class="text-2xl font-bold mb-4">Deep Resonance Thinking</h3>
+                    <p class="text-gray-400 mb-4">Revolutionary 6-layer cognitive architecture for unprecedented reasoning depth.</p>
+                </div>
+                <div class="bg-gray-800 rounded-2xl p-8 card-hover fade-in" style="animation-delay: 0.1s;">
+                    <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6"><i class="fas fa-users text-3xl text-white"></i></div>
+                    <h3 class="text-2xl font-bold mb-4">Multi-Agent Orchestration</h3>
+                    <p class="text-gray-400 mb-4">5 specialized AI agents collaborating in real-time to solve complex problems.</p>
+                </div>
+                <div class="bg-gray-800 rounded-2xl p-8 card-hover fade-in" style="animation-delay: 0.2s;">
+                    <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6"><i class="fas fa-memory text-3xl text-white"></i></div>
+                    <h3 class="text-2xl font-bold mb-4">Persistent Memory</h3>
+                    <p class="text-gray-400 mb-4">True learning and knowledge retention across sessions with editable memory.</p>
+                </div>
+                <div class="bg-gray-800 rounded-2xl p-8 card-hover fade-in" style="animation-delay: 0.3s;">
+                    <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6"><i class="fas fa-eye text-3xl text-white"></i></div>
+                    <h3 class="text-2xl font-bold mb-4">Vision & Multimodal</h3>
+                    <p class="text-gray-400 mb-4">Image understanding, OCR, scene analysis, and AR-ready capabilities.</p>
+                </div>
+                <div class="bg-gray-800 rounded-2xl p-8 card-hover fade-in" style="animation-delay: 0.4s;">
+                    <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6"><i class="fas fa-file-alt text-3xl text-white"></i></div>
+                    <h3 class="text-2xl font-bold mb-4">RAG & Document Analysis</h3>
+                    <p class="text-gray-400 mb-4">Upload documents, get intelligent answers with citations and context.</p>
+                </div>
+                <div class="bg-gray-800 rounded-2xl p-8 card-hover fade-in" style="animation-delay: 0.5s;">
+                    <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6"><i class="fas fa-robot text-3xl text-white"></i></div>
+                    <h3 class="text-2xl font-bold mb-4">Autopilot Mode</h3>
+                    <p class="text-gray-400 mb-4">"Build [idea]" → full-stack application scaffolding in seconds.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 gradient-text">Deep Resonance Thinking</h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">6-layer cognitive architecture that processes information like never before</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="layer-card bg-gray-700 rounded-xl p-6 fade-in" onclick="activateLayer(this)">
+                    <div class="flex items-center mb-4"><div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mr-4"><span class="text-2xl font-bold">1</span></div><h3 class="text-xl font-bold">Meta-Cognitive Awareness</h3></div>
+                    <ul class="text-gray-400 space-y-2"><li><i class="fas fa-check text-purple-400 mr-2"></i>Self-awareness & confidence</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Bias detection</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Logical fallacy checking</li></ul>
+                </div>
+                <div class="layer-card bg-gray-700 rounded-xl p-6 fade-in" style="animation-delay: 0.1s;" onclick="activateLayer(this)">
+                    <div class="flex items-center mb-4"><div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mr-4"><span class="text-2xl font-bold">2</span></div><h3 class="text-xl font-bold">Multi-Perspective Synthesis</h3></div>
+                    <ul class="text-gray-400 space-y-2"><li><i class="fas fa-check text-purple-400 mr-2"></i>Expert, Critic, User views</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Dialectical reasoning</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Contradiction resolution</li></ul>
+                </div>
+                <div class="layer-card bg-gray-700 rounded-xl p-6 fade-in" style="animation-delay: 0.2s;" onclick="activateLayer(this)">
+                    <div class="flex items-center mb-4"><div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mr-4"><span class="text-2xl font-bold">3</span></div><h3 class="text-xl font-bold">Temporal Depth Reasoning</h3></div>
+                    <ul class="text-gray-400 space-y-2"><li><i class="fas fa-check text-purple-400 mr-2"></i>Causal chain mapping</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Counterfactual simulation</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Multi-timeframe analysis</li></ul>
+                </div>
+                <div class="layer-card bg-gray-700 rounded-xl p-6 fade-in" style="animation-delay: 0.3s;" onclick="activateLayer(this)">
+                    <div class="flex items-center mb-4"><div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mr-4"><span class="text-2xl font-bold">4</span></div><h3 class="text-xl font-bold">Conceptual Lattice Navigation</h3></div>
+                    <ul class="text-gray-400 space-y-2"><li><i class="fas fa-check text-purple-400 mr-2"></i>Cross-domain analogies</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Concept blending</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Abstract-to-concrete bridging</li></ul>
+                </div>
+                <div class="layer-card bg-gray-700 rounded-xl p-6 fade-in" style="animation-delay: 0.4s;" onclick="activateLayer(this)">
+                    <div class="flex items-center mb-4"><div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mr-4"><span class="text-2xl font-bold">5</span></div><h3 class="text-xl font-bold">Emergent Property Detection</h3></div>
+                    <ul class="text-gray-400 space-y-2"><li><i class="fas fa-check text-purple-400 mr-2"></i>System-level patterns</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Dynamics modeling</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Holistic synthesis</li></ul>
+                </div>
+                <div class="layer-card bg-gray-700 rounded-xl p-6 fade-in" style="animation-delay: 0.5s;" onclick="activateLayer(this)">
+                    <div class="flex items-center mb-4"><div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mr-4"><span class="text-2xl font-bold">6</span></div><h3 class="text-xl font-bold">Recursive Self-Improvement</h3></div>
+                    <ul class="text-gray-400 space-y-2"><li><i class="fas fa-check text-purple-400 mr-2"></i>Strategy optimization</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Meta-strategy updates</li><li><i class="fas fa-check text-purple-400 mr-2"></i>Knowledge consolidation</li></ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 gradient-text">Simple Pricing</h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">Choose the plan that fits your needs</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="pricing-card bg-gray-800 rounded-2xl p-8 fade-in">
+                    <h3 class="text-2xl font-bold mb-2">Starter</h3>
+                    <p class="text-gray-400 mb-6">For individuals and small projects</p>
+                    <div class="mb-6"><span class="text-5xl font-bold gradient-text">$9</span><span class="text-gray-400">/month</span></div>
+                    <ul class="space-y-4 mb-8"><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>100K tokens/month</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>Basic DRT features</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>100 document RAG</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>Community support</li></ul>
+                    <button class="w-full border-2 border-purple-500 py-3 rounded-full text-white font-semibold hover:bg-purple-500 transition">Get Started</button>
+                </div>
+                <div class="pricing-card featured bg-gray-800 rounded-2xl p-8 fade-in" style="animation-delay: 0.1s;">
+                    <div class="text-center mb-4"><span class="bg-purple-500 text-white px-4 py-1 rounded-full text-sm font-semibold">Most Popular</span></div>
+                    <h3 class="text-2xl font-bold mb-2">Pro</h3>
+                    <p class="text-gray-400 mb-6">For professionals and teams</p>
+                    <div class="mb-6"><span class="text-5xl font-bold gradient-text">$49</span><span class="text-gray-400">/month</span></div>
+                    <ul class="space-y-4 mb-8"><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>1M tokens/month</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>Full DRT features</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>Multi-agent mode</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>1,000 document RAG</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>Priority support</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>API access</li></ul>
+                    <button class="w-full btn-primary py-3 rounded-full text-white font-semibold">Get Started</button>
+                </div>
+                <div class="pricing-card bg-gray-800 rounded-2xl p-8 fade-in" style="animation-delay: 0.2s;">
+                    <h3 class="text-2xl font-bold mb-2">Enterprise</h3>
+                    <p class="text-gray-400 mb-6">For large organizations</p>
+                    <div class="mb-6"><span class="text-5xl font-bold gradient-text">Custom</span></div>
+                    <ul class="space-y-4 mb-8"><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>Unlimited tokens</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>Full platform access</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>Custom model training</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>Dedicated support</li><li class="flex items-center text-gray-300"><i class="fas fa-check text-purple-400 mr-3"></i>SLA guarantees</li></ul>
+                    <button class="w-full border-2 border-purple-500 py-3 rounded-full text-white font-semibold hover:bg-purple-500 transition">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="comparison" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 gradient-text">Why Synova AI?</h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">See how we compare to other leading AI platforms</p>
+            </div>
+            <div class="overflow-x-auto fade-in">
+                <table class="w-full bg-gray-700 rounded-2xl overflow-hidden">
+                    <thead><tr class="gradient-bg"><th class="px-6 py-4 text-left">Feature</th><th class="px-6 py-4 text-center">GPT-4</th><th class="px-6 py-4 text-center">Claude</th><th class="px-6 py-4 text-center">Gemini</th><th class="px-6 py-4 text-center font-bold">Synova AI</th></tr></thead>
+                    <tbody>
+                        <tr class="border-t border-gray-600"><td class="px-6 py-4">Deep Resonance Thinking</td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-green-400"><i class="fas fa-check"></i></td></tr>
+                        <tr class="border-t border-gray-600"><td class="px-6 py-4">Multi-Agent Orchestration</td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-green-400"><i class="fas fa-check"></i></td></tr>
+                        <tr class="border-t border-gray-600"><td class="px-6 py-4">Persistent Memory</td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-green-400"><i class="fas fa-check"></i></td></tr>
+                        <tr class="border-t border-gray-600"><td class="px-6 py-4">Custom Model Fine-tuning</td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-red-400"><i class="fas fa-times"></i></td><td class="px-6 py-4 text-center text-green-400"><i class="fas fa-check"></i></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 gradient-text">Roadmap</h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">Our journey to the future of AI</p>
+            </div>
+            <div class="max-w-3xl mx-auto space-y-8">
+                <div class="fade-in"><div class="bg-gray-800 rounded-xl p-6"><div class="flex items-center justify-between mb-4"><h3 class="text-xl font-bold">Q2 2026</h3><span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">In Progress</span></div><ul class="text-gray-400 space-y-2"><li><i class="fas fa-check text-green-400 mr-2"></i>Deep Resonance Thinking architecture</li><li><i class="fas fa-check text-green-400 mr-2"></i>Self-learning agent</li><li><i class="fas fa-spinner text-yellow-400 mr-2"></i>Next.js frontend implementation</li></ul></div></div>
+                <div class="fade-in" style="animation-delay: 0.1s;"><div class="bg-gray-800 rounded-xl p-6"><div class="flex items-center justify-between mb-4"><h3 class="text-xl font-bold">Q3 2026</h3><span class="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">Upcoming</span></div><ul class="text-gray-400 space-y-2"><li><i class="fas fa-circle text-purple-400 mr-2"></i>Complete Nexus specification</li><li><i class="fas fa-circle text-purple-400 mr-2"></i>Mobile app (React Native)</li><li><i class="fas fa-circle text-purple-400 mr-2"></i>Enhanced AR/VR features</li></ul></div></div>
+                <div class="fade-in" style="animation-delay: 0.2s;"><div class="bg-gray-800 rounded-xl p-6"><div class="flex items-center justify-between mb-4"><h3 class="text-xl font-bold">2027</h3><span class="bg-gray-500 text-white px-3 py-1 rounded-full text-sm">Vision</span></div><ul class="text-gray-400 space-y-2"><li><i class="fas fa-star text-yellow-400 mr-2"></i>Proprietary frontier models</li><li><i class="fas fa-star text-yellow-400 mr-2"></i>Advanced multimodal capabilities</li><li><i class="fas fa-star text-yellow-400 mr-2"></i>AGI research initiatives</li></ul></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 hero-gradient">
+        <div class="max-w-4xl mx-auto px-6 text-center fade-in">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">Ready to Experience the Future?</h2>
+            <p class="text-xl text-gray-300 mb-8">Join thousands of users already leveraging the power of Deep Resonance Thinking</p>
+            <button class="btn-primary px-8 py-4 rounded-full text-white font-semibold text-lg pulse-glow"><i class="fas fa-rocket mr-2"></i>Start Your Free Trial</button>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center"><i class="fas fa-brain text-white text-xl"></i></div>
+                    <span class="text-2xl font-bold gradient-text">Synova AI</span>
+                </div>
+                <div class="flex space-x-6 text-gray-400">
+                    <a href="#" class="hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="fab fa-github text-xl"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="fab fa-discord text-xl"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="fab fa-linkedin text-xl"></i></a>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-gray-500">
+                <p>&copy; 2026 Synova AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Fade in on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Layer card activation
+        function activateLayer(element) {
+            document.querySelectorAll('.layer-card').forEach(card => card.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,402 @@
+name: Synova Full Deploy v4.1
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_production:
+        description: 'Deploy to production'
+        required: false
+        default: false
+        type: boolean
+      build_quest:
+        description: 'Build Quest 3 APK'
+        required: false
+        default: true
+        type: boolean
+
+env:
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.11'
+  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+  EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
+  EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
+
+jobs:
+  # Test Phase
+  test:
+    name: Test All Services
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [core-api, holo-renderer, ui-system, xr-workspace]
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: |
+            synova-holo-renderer/package.json
+            synova-ui-system/package.json
+            synova-xr-workspace/package.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: synova-core-api/requirements.txt
+
+      - name: Install Dependencies
+        run: |
+          case "${{ matrix.service }}" in
+            "core-api")
+              cd synova-core-api && pip install -r requirements.txt
+              ;;
+            "holo-renderer")
+              cd synova-holo-renderer && npm ci
+              ;;
+            "ui-system")
+              cd synova-ui-system && npm ci
+              ;;
+            "xr-workspace")
+              cd synova-xr-workspace && npm ci
+              ;;
+          esac
+
+      - name: Run Tests
+        run: |
+          case "${{ matrix.service }}" in
+            "core-api")
+              cd synova-core-api && python -m pytest --cov=. --cov-report=xml
+              ;;
+            "holo-renderer")
+              cd synova-holo-renderer && npm test -- --coverage --coverageReporters=text-lcov
+              ;;
+            "ui-system")
+              cd synova-ui-system && npm test -- --coverage --coverageReporters=text-lcov
+              ;;
+            "xr-workspace")
+              cd synova-xr-workspace && npm test
+              ;;
+          esac
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+        if: matrix.service != 'xr-workspace'
+
+  # Build Phase
+  build:
+    name: Build Services
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [core-api, holo-renderer, ui-system, xr-workspace]
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Dependencies
+        run: |
+          case "${{ matrix.service }}" in
+            "core-api")
+              cd synova-core-api && pip install -r requirements.txt
+              ;;
+            *)
+              cd synova-${{ matrix.service }} && npm ci
+              ;;
+          esac
+
+      - name: Build Service
+        run: |
+          case "${{ matrix.service }}" in
+            "core-api")
+              cd synova-core-api && python -m py_compile main.py
+              ;;
+            "holo-renderer")
+              cd synova-holo-renderer && npm run build
+              ;;
+            "ui-system")
+              cd synova-ui-system && npm run build
+              ;;
+            "xr-workspace")
+              cd synova-xr-workspace && npm run build:preview
+              ;;
+          esac
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.service }}-build
+          path: |
+            synova-${{ matrix.service }}/dist
+            synova-${{ matrix.service }}/build
+            synova-core-api/main.py
+          retention-days: 7
+
+  # Deploy Backend Services
+  deploy-backend:
+    name: Deploy Backend Services
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event.inputs.deploy_production
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: core-api-build
+          path: synova-core-api
+
+      - name: Deploy Core API to Railway
+        run: |
+          echo "Installing Railway CLI..."
+          npm install -g @railway/cli
+          echo "Deploying to Railway..."
+          cd synova-core-api
+          railway login --token ${{ secrets.RAILWAY_TOKEN }}
+          railway up --service synova-core-api
+
+      - name: Deploy Holo Renderer to Railway
+        run: |
+          echo "Installing Railway CLI..."
+          npm install -g @railway/cli
+          echo "Deploying to Railway..."
+          cd synova-holo-renderer
+          railway login --token ${{ secrets.RAILWAY_TOKEN }}
+          railway up --service synova-holo-renderer
+
+      - name: Wait for Deployment
+        run: |
+          echo "Waiting for services to be ready..."
+          sleep 30
+          
+          # Health checks
+          curl -f https://synova-core-api-production.up.railway.app/health || exit 1
+          curl -f https://synova-holo-renderer-production.up.railway.app/ || exit 1
+
+  # Build and Deploy XR App
+  deploy-xr:
+    name: Build & Deploy XR App
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event.inputs.build_quest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: synova-xr-workspace/package.json
+
+      - name: Setup Expo CLI
+        run: npm install -g @expo/cli eas-cli
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: xr-workspace-build
+          path: synova-xr-workspace
+
+      - name: Build Quest 3 APK
+        run: |
+          cd synova-xr-workspace
+          eas build --platform android --profile quest3 --non-interactive
+        env:
+          EAS_PROJECT_ID: ${{ env.EAS_PROJECT_ID }}
+          EAS_TOKEN: ${{ env.EAS_TOKEN }}
+
+      - name: Submit to Meta Quest Store
+        run: |
+          cd synova-xr-workspace
+          eas submit --platform android --non-interactive
+        if: github.event.inputs.deploy_production
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: synova-xr-apk
+          path: synova-xr-workspace/build-*.apk
+          retention-days: 30
+
+  # Deploy Frontend
+  deploy-frontend:
+    name: Deploy Frontend
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event.inputs.deploy_production
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: ui-system-build
+          path: synova-ui-system
+
+      - name: Deploy UI System to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./synova-ui-system
+          vercel-args: '--prod'
+
+  # Train and Deploy Synova Brain
+  deploy-brain:
+    name: Deploy Synova Brain
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Dependencies
+        run: |
+          cd synova-brain
+          pip install -r requirements.txt
+
+      - name: Fine-tune Synova Brain
+        run: |
+          cd synova-brain
+          python train.py
+
+      - name: Deploy to Ollama
+        run: |
+          cd synova-brain
+          chmod +x deploy.sh
+          ./deploy.sh
+
+      - name: Test Brain Integration
+        run: |
+          echo "Build me a modern warehouse" | ollama run synova-brain
+
+  # Post-Deploy Tests
+  integration-test:
+    name: Integration Tests
+    needs: [deploy-backend, deploy-frontend, deploy-xr]
+    runs-on: ubuntu-latest
+    if: always() && (needs.deploy-backend.result == 'success' || needs.deploy-frontend.result == 'success')
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Test Dependencies
+        run: npm install -g playwright
+
+      - name: Install Project Dependencies
+        run: |
+          cd synova-ui-system && npm ci
+
+      - name: Run E2E Tests
+        run: |
+          cd synova-ui-system
+          npx playwright test --reporter=github
+        env:
+          CI: true
+          PLAYWRIGHT_BROWSERS_PATH: 0
+
+      - name: Test API Integration
+        run: |
+          # Test Core API
+          curl -f https://synova-core-api-production.up.railway.app/health
+          
+          # Test Blueprint Generation
+          curl -X POST https://synova-core-api-production.up.railway.app/blueprint/generate \
+            -H "Content-Type: application/json" \
+            -d '{"blueprint_type": "warehouse", "parameters": {}}'
+
+      - name: Test XR App Build
+        run: |
+          # Download and test APK
+          curl -L -o synova-xr.apk \
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/synova-xr-apk
+          
+          # Basic APK validation
+          file synova-xr.apk | grep -q "Android application package"
+
+  # Notify Results
+  notify:
+    name: Notify Deployment Status
+    needs: [integration-test]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Notify Success
+        if: needs.integration-test.result == 'success'
+        run: |
+          echo "🎉 SYNOVA AUTOPILOT v4.1 DEPLOYMENT SUCCESSFUL!"
+          echo "🚀 Services: https://synova-core-api-production.up.railway.app"
+          echo "🎮 XR App: Ready for Meta Quest Store"
+          echo "💎 UI: https://synova-ui.vercel.app"
+
+      - name: Notify Failure
+        if: needs.integration-test.result == 'failure'
+        run: |
+          echo "❌ DEPLOYMENT FAILED - Check logs for details"
+          exit 1
+
+      - name: Update Deployment Status
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.number }}
+          body: |
+            ## 🚀 SYNOVA AUTOPILOT v4.1 Deployment Status
+            
+            **Status:** ${{ job.status == 'success' && '✅ SUCCESS' || '❌ FAILED' }}
+            
+            **Services Deployed:**
+            - Core API: https://synova-core-api-production.up.railway.app
+            - Holo Renderer: https://synova-holo-renderer-production.up.railway.app  
+            - UI System: https://synova-ui.vercel.app
+            - XR App: Available in artifacts
+            
+            **Build:** ${{ github.sha }}
+            **Time:** ${{ github.event.head_commit.timestamp }}

@@ -5,13 +5,18 @@
 import { ToolManager } from './tools';
 import { ContextEmitter } from './context';
 import { PermissionManager } from './permissions';
+import { AutopilotManager } from './autopilot';
 import {
   SupanovaClient,
   SupanovaConfig,
   ToolRequest,
   ToolResponse,
   PermissionCheckResult,
-  ToolRegistry
+  ToolRegistry,
+  AssistantMode,
+  AutopilotAction,
+  AutopilotDecision,
+  AutopilotStats
 } from './types';
 
 /**
@@ -22,14 +27,41 @@ export class SupanovaSDK implements SupanovaClient {
   public readonly tools: ToolManager & ToolRegistry;
   public readonly context: ContextEmitter;
   public readonly permissions: PermissionManager;
+  public readonly autopilot: AutopilotManager;
 
   private started = false;
+
+  /**
+   * Get default autopilot configuration
+   */
+  private getDefaultAutopilotConfig() {
+    return {
+      enabled: this.config.autopilot?.enabled ?? false,
+      auto_confirm_safe_actions: this.config.autopilot?.auto_confirm_safe_actions ?? true,
+      learning_enabled: this.config.autopilot?.learning_enabled ?? true,
+      max_autonomous_actions: this.config.autopilot?.max_autonomous_actions ?? 10,
+      risk_threshold: this.config.autopilot?.risk_threshold ?? 'medium',
+      allowed_actions: this.config.autopilot?.allowed_actions ?? [
+        'help_assistant',
+        'search',
+        'get_info',
+        'diagnose_errors'
+      ],
+      blocked_actions: this.config.autopilot?.blocked_actions ?? [
+        'delete',
+        'destroy',
+        'reset',
+        'format'
+      ]
+    };
+  }
 
   constructor(config: SupanovaConfig) {
     this.config = this.validateConfig(config);
     this.tools = new ToolManager();
     this.context = new ContextEmitter();
     this.permissions = new PermissionManager();
+    this.autopilot = new AutopilotManager(this.getDefaultAutopilotConfig());
 
     this.setupEventListeners();
     this.setupDefaultMiddleware();
@@ -51,6 +83,11 @@ export class SupanovaSDK implements SupanovaClient {
     // Validate all permissions
     if (!this.permissions.validatePermissions()) {
       throw new Error('Invalid permissions configuration');
+    }
+
+    // Initialize autopilot if enabled
+    if (this.config.autopilot?.enabled) {
+      await this.autopilot.enable();
     }
 
     this.started = true;
@@ -156,9 +193,11 @@ export class SupanovaSDK implements SupanovaClient {
       allowed_checks: number;
       denied_checks: number;
     };
+    autopilot?: AutopilotStats;
   } {
     const contextStats = this.context.getStatistics();
     const permissionStats = this.permissions.getStatistics();
+    const autopilotStats = this.autopilot.getStatistics();
 
     return {
       tools: {
@@ -176,7 +215,60 @@ export class SupanovaSDK implements SupanovaClient {
         allowed_checks: permissionStats.allowed_checks,
         denied_checks: permissionStats.denied_checks,
       },
+      autopilot: autopilotStats,
     };
+  }
+
+  /**
+   * Enable autopilot mode
+   */
+  async enableAutopilot(): Promise<void> {
+    await this.autopilot.enable();
+  }
+
+  /**
+   * Disable autopilot mode
+   */
+  async disableAutopilot(): Promise<void> {
+    await this.autopilot.disable();
+  }
+
+  /**
+   * Set assistant mode (including autopilot)
+   */
+  setAssistantMode(mode: AssistantMode): void {
+    this.autopilot.setMode(mode);
+  }
+
+  /**
+   * Get current assistant mode
+   */
+  getAssistantMode(): AssistantMode {
+    return this.autopilot.getMode();
+  }
+
+  /**
+   * Analyze context for autonomous actions
+   */
+  async analyzeForAutopilot(): Promise<AutopilotAction[]> {
+    const currentContext = this.context.getCurrentContext();
+    return await this.autopilot.analyzeContext(currentContext);
+  }
+
+  /**
+   * Execute autopilot action
+   */
+  async executeAutopilotAction(action: AutopilotAction): Promise<ToolResponse> {
+    return await this.autopilot.executeAction(action, (toolName, args) =>
+      this.executeTool(toolName, args)
+    );
+  }
+
+  /**
+   * Make autopilot decision for an action
+   */
+  async makeAutopilotDecision(action: AutopilotAction): Promise<AutopilotDecision> {
+    return await this.autopilot.makeDecision(action);
   }
 
   /**
@@ -306,16 +398,39 @@ export function createDefaultConfig(overrides: Partial<SupanovaConfig> = {}): Su
       sanitize_outputs: true,
       audit_all_actions: true,
     },
+    autopilot: {
+      enabled: true,
+      auto_confirm_safe_actions: true,
+      learning_enabled: true,
+      max_autonomous_actions: 10,
+      risk_threshold: 'medium',
+      allowed_actions: [
+        'help_assistant',
+        'search',
+        'get_info',
+        'diagnose_errors',
+        'analyze_context',
+        'suggest_improvements'
+      ],
+      blocked_actions: [
+        'delete',
+        'destroy',
+        'reset',
+        'format',
+        'remove_all'
+      ]
+    },
     ...overrides,
   };
 }
 
 // Export main classes and utilities
-export { ToolManager, ContextEmitter, PermissionManager };
+export { ToolManager, ContextEmitter, PermissionManager, AutopilotManager };
 export * from './types';
 export * from './tools';
 export * from './context';
 export * from './permissions';
+export * from './autopilot';
 
 // Default export
 export default SupanovaSDK;

@@ -312,11 +312,11 @@ export class ContextEmitter implements IContextEmitter {
    */
   private getMetadata(): AppContext['metadata'] {
     // This would typically come from the app environment
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && window.innerWidth && window.innerHeight) {
       return {
         app_version: '1.0.0', // This would come from app config
         screen_size: `${window.innerWidth}x${window.innerHeight}`,
-        user_agent: navigator.userAgent,
+        user_agent: (typeof navigator !== 'undefined' && navigator.userAgent) || 'unknown',
       };
     }
 
@@ -441,8 +441,8 @@ export class ContextAnalytics {
       .slice(0, 10);
 
     return {
-      mostUsedTools,
-      commonActions,
+      most_used_tools: mostUsedTools,
+      common_actions: commonActions,
       session_patterns: {
         average_session_duration: sessionDurations.length > 0 
           ? sessionDurations.reduce((a, b) => a + b, 0) / sessionDurations.length 

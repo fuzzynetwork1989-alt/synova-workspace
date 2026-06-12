@@ -1,7 +1,7 @@
 # Install dependencies for all Synova Nexxus Ecosystem packages
 
 param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [string]$PackagePath = "packages"
 )
 
@@ -36,7 +36,7 @@ Write-Step "Installing dependencies for all Synova packages..."
 # List of all packages
 $Packages = @(
     "synova-nexxus",
-    "synova-packages-supanova-sdk", 
+    "synova-packages-supanova-sdk",
     "synova-packages-ui",
     "synova-app-template",
     "synova-app-task-manager",
@@ -46,17 +46,17 @@ $Packages = @(
 # Install dependencies for each package
 foreach ($Package in $Packages) {
     $PackageDir = Join-Path -Path $PackagePath -ChildPath $Package
-    
+
     if (Test-Path $PackageDir) {
         Write-Step "Installing dependencies for $Package..."
-        
+
         Set-Location $PackageDir
-        
+
         # Check if package.json exists
         if (Test-Path "package.json") {
             # Install dependencies
             $Result = npm install --silent
-            
+
             if ($LASTEXITCODE -eq 0) {
                 Write-Success "Dependencies installed for $Package"
             } else {
@@ -67,7 +67,7 @@ foreach ($Package in $Packages) {
             Write-Error "package.json not found in $PackageDir"
             exit 1
         }
-        
+
         Set-Location $PSScriptRoot
     } else {
         Write-Error "Package directory $PackageDir not found"
@@ -85,4 +85,4 @@ Write-Host "   2. Build packages:"
 Write-Host "      - Supanova SDK: cd packages/synova-packages-supanova-sdk && npm run build"
 Write-Host "      - UI Components: cd packages/synova-packages-ui && npm run build"
 Write-Host "   3. Set up databases and test services"
-Write-Host ""
+Write-Host ""   

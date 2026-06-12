@@ -18,6 +18,9 @@ export class ToolManager extends EventEmitter {
   private middleware: ToolMiddleware[] = [];
   private errorHandler?: ErrorHandler;
 
+  // Index signature to implement ToolRegistry
+  [key: string]: ToolHandler | undefined | any;
+
   /**
    * Register a new tool
    */

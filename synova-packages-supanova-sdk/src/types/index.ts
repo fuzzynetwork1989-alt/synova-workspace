@@ -89,6 +89,15 @@ export interface SupanovaConfig {
     sanitize_outputs: boolean;
     audit_all_actions: boolean;
   };
+  autopilot?: {
+    enabled: boolean;
+    auto_confirm_safe_actions: boolean;
+    learning_enabled: boolean;
+    max_autonomous_actions: number;
+    risk_threshold: 'low' | 'medium' | 'high';
+    allowed_actions: string[];
+    blocked_actions: string[];
+  };
 }
 
 export interface SupanovaManifest {
@@ -200,7 +209,46 @@ export interface MemoryStore {
   keys(): Promise<string[]>;
 }
 
-export type AssistantMode = 'default' | 'creator' | 'utility' | 'analyst' | 'support';
+export type AssistantMode = 'default' | 'creator' | 'utility' | 'analyst' | 'support' | 'autopilot';
+
+export interface AutopilotConfig {
+  enabled: boolean;
+  auto_confirm_safe_actions: boolean;
+  learning_enabled: boolean;
+  max_autonomous_actions: number;
+  risk_threshold: 'low' | 'medium' | 'high';
+  allowed_actions: string[];
+  blocked_actions: string[];
+}
+
+export interface AutopilotAction {
+  id: string;
+  tool_name: string;
+  args: Record<string, any>;
+  confidence: number;
+  risk_level: 'low' | 'medium' | 'high';
+  reason: string;
+  timestamp: string;
+  context: Partial<ToolRequest['context']>;
+  result?: ToolResponse;
+}
+
+export interface AutopilotDecision {
+  action_id: string;
+  decision: 'execute' | 'confirm' | 'block';
+  reason: string;
+  confidence: number;
+  timestamp: string;
+}
+
+export interface AutopilotStats {
+  total_actions_analyzed: number;
+  auto_executed: number;
+  blocked: number;
+  confirmation_requested: number;
+  success_rate: number;
+  average_confidence: number;
+}
 
 export interface AssistantConfig {
   mode: AssistantMode;
